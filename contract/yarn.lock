@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@account-abstraction/contracts@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@account-abstraction/contracts/-/contracts-0.3.0.tgz#a8496f69c212dcc2fdc63f5e904a89ce5a2ad5f5"
+  integrity sha512-vCwFBHTggoz+UkJ5O8IHdcyDPcaN1QMy7tSqE2mCs3bdocZeyyN8oPY6g/YrO6c8ewyOWhQ1+lrui2XIEiwdVw==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -658,6 +663,11 @@
     semver "^6.3.0"
     table "^6.8.0"
     undici "^5.4.0"
+
+"@openzeppelin/contracts@^4.8.0":
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.0.tgz#6854c37df205dd2c056bdfa1b853f5d732109109"
+  integrity sha512-AGuwhRRL+NaKx73WKRNzeCxOCOCxpaqF+kp8TJ89QzAipSwZy/NoflkWaL9bywXFRhIzXt8j38sfF7KBKCPWLw==
 
 "@scure/base@~1.1.0":
   version "1.1.1"
