@@ -27,9 +27,20 @@ const customStyles: ReactModal.Styles = {
 type Prop = {
 	isAddModal: any;
 	closeAddModal: any;
+	whiteList: string[];
+	setWhiteList: any;
+	displayWhiteList: any;
+	setDisplayWhiteList: any;
 };
 
-const AddModal: FC<Prop> = ({ isAddModal, closeAddModal }) => {
+const AddModal: FC<Prop> = ({
+	isAddModal,
+	closeAddModal,
+	whiteList,
+	setWhiteList,
+	displayWhiteList,
+	setDisplayWhiteList,
+}) => {
 	const [contractAddress, setContractAddress] = useState("");
 	const [name, setName] = useState("");
 
@@ -39,6 +50,20 @@ const AddModal: FC<Prop> = ({ isAddModal, closeAddModal }) => {
 
 	const doChangeName = (e: any) => {
 		setName(e.target.value);
+	};
+
+	const addContract = () => {
+		const tmpWhiteList = whiteList;
+		const tmpDisplayWhiteList = displayWhiteList;
+		const tmpGroup = {
+			name: name,
+			address: contractAddress,
+		};
+		tmpWhiteList.push(contractAddress);
+		tmpDisplayWhiteList.push(tmpGroup);
+		setWhiteList(tmpWhiteList);
+
+		closeAddModal();
 	};
 
 	return (
@@ -53,7 +78,7 @@ const AddModal: FC<Prop> = ({ isAddModal, closeAddModal }) => {
 						Add Contract
 					</div>
 					<div className="px-4 pt-8">
-						<div className="flex justify-between text-black font-bold">
+						<div className="flex justify-between text-gray-700 font-bold">
 							<div>Contract Address</div>
 							<input
 								onChange={doChangeContractAddress}
@@ -62,7 +87,7 @@ const AddModal: FC<Prop> = ({ isAddModal, closeAddModal }) => {
 						</div>
 						<div
 							onChange={doChangeName}
-							className="flex justify-between text-black pt-4 font-bold"
+							className="flex justify-between text-gray-700 pt-4 font-bold"
 						>
 							<div>name</div>
 							<input className="bg-white border border-gray-700 rounded-md"></input>
@@ -70,7 +95,7 @@ const AddModal: FC<Prop> = ({ isAddModal, closeAddModal }) => {
 					</div>
 					<div className="flex justify-center pt-8">
 						<div
-							onClick={() => {}}
+							onClick={addContract}
 							className="px-6 text-white cursor-pointer font-bold py-2 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
 						>
 							Add

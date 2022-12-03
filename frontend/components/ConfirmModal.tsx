@@ -25,55 +25,48 @@ const customStyles: ReactModal.Styles = {
 };
 
 type Prop = {
-	isLoginModal: any;
-	closeLoginModal: any;
+	isConfirmModal: any;
+	// closeConfirmModal: any;
+	setRootPassword: any;
+	createPersona: () => void;
 };
 
-const LoginModal: FC<Prop> = ({ isLoginModal, closeLoginModal }) => {
-	const [address, setAddress] = useState("");
-	const [password, setPassWord] = useState("");
-
-	const doChangeAddress = (e: any) => {
-		setAddress(e.target.value);
-	};
-
+const ConfirmModal: FC<Prop> = ({
+	isConfirmModal,
+	// closeConfirmModal,
+	setRootPassword,
+	createPersona,
+}) => {
 	const doChangePassword = (e: any) => {
-		setPassWord(e.target.value);
+		setRootPassword(e.target.value);
 	};
 
 	return (
 		<Modal
-			isOpen={isLoginModal}
-			onRequestClose={closeLoginModal}
+			isOpen={isConfirmModal}
+			// onRequestClose={closeConfirmModal}
 			style={customStyles}
 		>
 			<div className="w-full h-full bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-1 rounded-lg">
 				<div className="w-full h-full bg-white rounded-lg">
 					<div className=" text-center text-black pt-4 font-bold text-xl">
-						Login
+						Create Persona
 					</div>
 					<div className="px-4 pt-8">
-						<div className="flex justify-between text-gray-700 font-bold">
-							<div>Address</div>
-							<input
-								onChange={doChangeAddress}
-								className="bg-white border border-gray-700 rounded-md"
-							></input>
-						</div>
-						<div className="flex justify-between text-gray-700 pt-4 font-bold">
-							<div>Password</div>
-							<input
-								onChange={doChangePassword}
-								className="bg-white border border-gray-700 rounded-md"
-							></input>
+						<div
+							onChange={doChangePassword}
+							className="flex justify-between text-gray-700 pt-4 font-bold"
+						>
+							<div>password</div>
+							<input className="bg-white border border-gray-700 rounded-md"></input>
 						</div>
 					</div>
 					<div className="flex justify-center pt-8">
 						<div
-							onClick={() => {}}
+							onClick={createPersona}
 							className="px-6 text-white cursor-pointer font-bold py-2 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
 						>
-							Login
+							Create Persona
 						</div>
 					</div>
 				</div>
@@ -82,4 +75,4 @@ const LoginModal: FC<Prop> = ({ isLoginModal, closeLoginModal }) => {
 	);
 };
 
-export default LoginModal;
+export default ConfirmModal;

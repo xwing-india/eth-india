@@ -16,7 +16,7 @@ const customStyles: ReactModal.Styles = {
 		bottom: "auto",
 		marginRight: "-50%",
 		width: "400px",
-		height: "240px",
+		height: "280px",
 		transform: "translate(-50%, -50%)",
 		borderRadius: "12px",
 		border: "0px",
@@ -25,55 +25,50 @@ const customStyles: ReactModal.Styles = {
 };
 
 type Prop = {
-	isLoginModal: any;
-	closeLoginModal: any;
+	isUpModal: any;
+	closeUpModal: any;
+	addInfo: {
+		name: string;
+		password: string;
+		spendLimit: string;
+	};
 };
 
-const LoginModal: FC<Prop> = ({ isLoginModal, closeLoginModal }) => {
-	const [address, setAddress] = useState("");
-	const [password, setPassWord] = useState("");
-
-	const doChangeAddress = (e: any) => {
-		setAddress(e.target.value);
+const UpModal: FC<Prop> = ({ isUpModal, closeUpModal, addInfo }) => {
+	const addPersona = () => {
+		//TODO バンドラーに送る操作
 	};
-
-	const doChangePassword = (e: any) => {
-		setPassWord(e.target.value);
-	};
-
 	return (
 		<Modal
-			isOpen={isLoginModal}
-			onRequestClose={closeLoginModal}
+			isOpen={isUpModal}
+			// onRequestClose={closeUpModal}
 			style={customStyles}
 		>
 			<div className="w-full h-full bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-1 rounded-lg">
 				<div className="w-full h-full bg-white rounded-lg">
 					<div className=" text-center text-black pt-4 font-bold text-xl">
-						Login
+						Add DAO Persona
 					</div>
 					<div className="px-4 pt-8">
 						<div className="flex justify-between text-gray-700 font-bold">
-							<div>Address</div>
-							<input
-								onChange={doChangeAddress}
-								className="bg-white border border-gray-700 rounded-md"
-							></input>
+							<div>name</div>
+							<div>{addInfo?.name}</div>
 						</div>
 						<div className="flex justify-between text-gray-700 pt-4 font-bold">
 							<div>Password</div>
-							<input
-								onChange={doChangePassword}
-								className="bg-white border border-gray-700 rounded-md"
-							></input>
+							<div>{addInfo?.password}</div>
+						</div>
+						<div className="flex justify-between text-gray-700 pt-4 font-bold">
+							<div>Spending Limit</div>
+							<div>{addInfo?.spendLimit} ETH</div>
 						</div>
 					</div>
 					<div className="flex justify-center pt-8">
 						<div
-							onClick={() => {}}
-							className="px-6 text-white cursor-pointer font-bold py-2 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
+							onClick={closeUpModal}
+							className="px-6 text-white cursor-pointer font-bold py-2 text-sm rounded-lg bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
 						>
-							Login
+							Add Persona
 						</div>
 					</div>
 				</div>
@@ -82,4 +77,4 @@ const LoginModal: FC<Prop> = ({ isLoginModal, closeLoginModal }) => {
 	);
 };
 
-export default LoginModal;
+export default UpModal;

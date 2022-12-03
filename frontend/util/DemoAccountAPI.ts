@@ -1,9 +1,12 @@
 import {BigNumber, BigNumberish, ethers, Signer, Wallet} from "ethers";
 import {BaseApiParams, BaseAccountAPI} from "@account-abstraction/sdk/dist/src/BaseAccountAPI";
-import {SimpleAccount} from "@account-abstraction/contracts";
 import {arrayify} from "ethers/lib/utils";
-import Web3 from "web3";
 import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
+import {
+  OAuthContractAddress,
+  EntryPointContractAddress,
+  BundlerRunOpRPCEndpoint,
+} from "./consts";
 
 export interface DemoAccountApiParams extends BaseApiParams {
   personaSigner: Signer;
@@ -48,22 +51,17 @@ export class DemoAccountAPI extends BaseAccountAPI {
   }
 }
 
-const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
+export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
   // password から秘密鍵を作る
   const infuraApiKey = process.env.INFURA_API_KEY;
   const providerHost = `https://${network}.infura.io/v3/${infuraApiKey}`
-  const web3 = new Web3(new Web3.providers.HttpProvider(providerHost));
-  const personaAccount = web3.eth.accounts.create(personaPassword); // ethers 側に統合する
-  const oauthAccountAddress = process.env.OAUTH_ACCOUNT_ADDRESS;
-  if (oauthAccountAddress === undefined) {
-    throw new Error("OAUTH_ACCOUNT_ADDRESS is not set");
-  }
+  const personaAccount = new ethers.Wallet(ethers.utils.id(personaPassword));
 
   // UserOperation の組み立て
   const api = new DemoAccountAPI({
-    accountContract: OAuthAccount__factory.connect(oauthAccountAddress, ethers.getDefaultProvider(providerHost)),
+    accountContract: OAuthAccount__factory.connect(OAuthContractAddress, ethers.getDefaultProvider(providerHost)),
     personaSigner: new Wallet(personaAccount.privateKey),
-    entryPointAddress: "",
+    entryPointAddress: EntryPointContractAddress,
     provider: ethers.getDefaultProvider(providerHost),
   })
 
@@ -73,11 +71,7 @@ const sendToBundler = async (network: string, personaPassword: string, from: str
   });
 
   // Bundler API を叩く
-  const bundlerEndpoint = process.env.BUNDLER_ENDPOINT;
-  if (bundlerEndpoint === undefined) {
-    throw new Error("BUNDLER_ENDPOINT is not set");
-  }
-  await fetch(bundlerEndpoint, {
+  await fetch(BundlerRunOpRPCEndpoint, {
     method: "POST",
     headers: {
       'content-type': 'application/json',
