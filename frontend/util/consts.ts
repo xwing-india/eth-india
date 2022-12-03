@@ -1,4 +1,4 @@
 export const OAuthContractAddress = ""; // TODO: fill
-export const EntryPointContractAddress = "0xb59fe658170fA89736cC8414D1a354ca21054A4A";
+export const EntryPointContractAddress = "0x100A8BFc27614d2E50b374dD6d8EF8357E295C6B";
 
-export const BundlerRunOpRPCEndpoint = ""; // TODO: fill
+export const BundlerRunOpRPCEndpoint = "https://us-central1-ethindia-e13a2.cloudfunctions.net/runOp";
