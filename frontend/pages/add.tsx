@@ -82,9 +82,9 @@ export default function Home() {
 					<div className="col-span-1 hidden md:block">
 						<LeftMenuBlock />
 					</div>
-					<div className="col-span-3 mb-24">
-						<div className=" rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-1">
-							<div className="h-full  w-full items-center justify-center bg-white rounded-lg">
+					<div className="col-span-3 mb-24 rounded-xl shadow-md">
+						<div className=" rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-[3px]">
+							<div className="h-full  w-full items-center justify-center bg-white rounded-[9px]">
 								<div className="flex justify-between items-center h-[72px] px-4">
 									<div className="text-2xl text-black">Add Persona</div>
 									<div></div>
