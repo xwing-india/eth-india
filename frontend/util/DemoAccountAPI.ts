@@ -31,6 +31,7 @@ export class DemoAccountAPI extends BaseAccountAPI {
     return this.accountContract.nonce();
   }
 
+  // callData を具体的に組み立てる
   encodeExecute(target: string, value: BigNumberish, data: string): Promise<string> {
     return Promise.resolve(this.accountContract.interface.encodeFunctionData(
       'execFromEntryPoint',
@@ -46,12 +47,12 @@ export class DemoAccountAPI extends BaseAccountAPI {
   }
 }
 
-const send = async (network: string, personaPassword: string, from: string, to: string, value: number) => {
+const send = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
   // password から秘密鍵を作る
   const infuraApiKey = process.env.INFURA_API_KEY;
   const providerHost = `https://${network}.infura.io/v3/${infuraApiKey}`
   const web3 = new Web3(new Web3.providers.HttpProvider(providerHost));
-  const personaAccount = web3.eth.accounts.create(personaPassword);
+  const personaAccount = web3.eth.accounts.create(personaPassword); // ethers 側に統合する
 
   // UserOperation の組み立て
   const api = new DemoAccountAPI({
@@ -63,7 +64,7 @@ const send = async (network: string, personaPassword: string, from: string, to: 
 
   const op = api.createSignedUserOp({
     target: to, // 送り先のアドレス
-    data: "", // TODO: 具体的な処理のデータ
+    data: data, // TODO: 具体的な処理のデータ
   });
 
   // Bundler API を叩く
