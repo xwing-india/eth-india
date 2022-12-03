@@ -83,18 +83,7 @@ contract OAuthAccount is BaseAccount {
         uint112 balance
     ) external {
         require(msg.sender == owner, "account: only owner can create persona");
-        Persona storage persona = personas[signer];
-        persona.creator = msg.sender;
-        persona.mode = 0x1; //set as personal
-        for (uint256 i = 0; i < allow.length; i++) {
-            persona.allowTargets.add(allow[i]);
-        }
-        for (uint256 i = 0; i < deny.length; i++) {
-            persona.denyTargets.add(deny[i]);
-        }
-        persona.balance = balance;
-        personaAddresses.push(signer);
-        emit PersonaCreated(signer, msg.sender, persona.mode);
+        _createPersona(PersonaData(signer, allow, deny, balance, 0x1));
     }
 
     function createSharingPersona(
@@ -106,18 +95,24 @@ contract OAuthAccount is BaseAccount {
             _approved[msg.sender],
             "account: only owner can create persona"
         );
-        Persona storage persona = personas[signer];
-        persona.creator = msg.sender;
-        persona.mode = 0x10; //set as sharing
-        for (uint256 i = 0; i < allow.length; i++) {
-            persona.allowTargets.add(allow[i]);
+        _createPersona(
+            PersonaData(signer, allow, deny, uint112(msg.value), 0x10)
+        );
+    }
+
+    function _createPersona(PersonaData memory data) private {
+        Persona storage persona = personas[data.creator];
+        persona.creator = data.creator;
+        persona.mode = data.mode;
+        for (uint256 i = 0; i < data.allowTargets.length; i++) {
+            persona.allowTargets.add(data.allowTargets[i]);
         }
-        for (uint256 i = 0; i < deny.length; i++) {
-            persona.denyTargets.add(deny[i]);
+        for (uint256 i = 0; i < data.denyTargets.length; i++) {
+            persona.denyTargets.add(data.denyTargets[i]);
         }
-        persona.balance = uint112(msg.value);
-        personaAddresses.push(signer);
-        emit PersonaCreated(signer, msg.sender, persona.mode);
+        persona.balance = data.balance;
+        personaAddresses.push(data.creator);
+        emit PersonaCreated(data.creator, data.creator, persona.mode);
     }
 
     function execFromEntryPoint(
