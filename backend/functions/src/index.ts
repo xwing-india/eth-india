@@ -6,7 +6,12 @@ import {initializeApp} from "firebase-admin/app";
 initializeApp();
 
 // eslint-disable-next-line max-len
-export const helloWorld = functions.https.onRequest((_: Request, response: Response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
+export const runOp = functions.https.onRequest((req: Request, resp: Response) => {
+  console.log(req.body);
+  // EntryPoint コントラクトを叩くためのクライアントを作る
+
+  // Request Body に存在する UserOperation を詰める
+
+  // EntryPoint コントラクトの `handleOps` を叩く
+  resp.send("{\"status\":\"success\"}");
 });
