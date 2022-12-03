@@ -1,11 +1,16 @@
-import {BigNumber, BigNumberish, Signer, Wallet} from "ethers";
+import {BigNumber, BigNumberish, ethers, Signer, Wallet} from "ethers";
 import {BaseApiParams, BaseAccountAPI} from "@account-abstraction/sdk/dist/src/BaseAccountAPI";
-import {SimpleAccount} from "@account-abstraction/contracts";
 import {arrayify} from "ethers/lib/utils";
+import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
+import {
+  OAuthContractAddress,
+  EntryPointContractAddress,
+  BundlerRunOpRPCEndpoint,
+} from "./consts";
 
 export interface DemoAccountApiParams extends BaseApiParams {
   personaSigner: Signer;
-  accountContract: SimpleAccount;
+  accountContract: OAuthAccount;
 }
 
 export class DemoAccountAPI extends BaseAccountAPI {
@@ -13,7 +18,7 @@ export class DemoAccountAPI extends BaseAccountAPI {
   personaSigner: Signer;
 
   // AA に接続するインスタンス
-  accountContract: SimpleAccount;
+  accountContract: OAuthAccount;
 
   constructor(params: DemoAccountApiParams) {
     super(params);
@@ -30,6 +35,7 @@ export class DemoAccountAPI extends BaseAccountAPI {
     return this.accountContract.nonce();
   }
 
+  // callData を具体的に組み立てる
   encodeExecute(target: string, value: BigNumberish, data: string): Promise<string> {
     return Promise.resolve(this.accountContract.interface.encodeFunctionData(
       'execFromEntryPoint',
@@ -45,22 +51,34 @@ export class DemoAccountAPI extends BaseAccountAPI {
   }
 }
 
-const sampleRun = (password: string) => {
-  // TODO: password から秘密鍵を作る
-  const personaSigner = new Wallet("");
-  const api = new DemoAccountAPI({
-    accountContract: undefined, // TODO: AA ウォレットへのアクセス用インスタンスを作る
-    personaSigner: personaSigner,
-    entryPointAddress: "",
-    provider: undefined, // TODO: infura とか
-  });
+export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
+  // password から秘密鍵を作る
+  const infuraApiKey = process.env.INFURA_API_KEY;
+  const providerHost = `https://${network}.infura.io/v3/${infuraApiKey}`
+  const personaAccount = new ethers.Wallet(ethers.utils.id(personaPassword));
 
-  // Note: target と data は `call data` に埋め込まれる
-  const op = api.createSignedUserOp({
-    target: "", // TODO: 送り先のアドレス
-    data: "", // TODO: 具体的な処理のデータ
+  // UserOperation の組み立て
+  const api = new DemoAccountAPI({
+    accountContract: OAuthAccount__factory.connect(OAuthContractAddress, ethers.getDefaultProvider(providerHost)),
+    personaSigner: new Wallet(personaAccount.privateKey),
+    entryPointAddress: EntryPointContractAddress,
+    provider: ethers.getDefaultProvider(providerHost),
   })
 
-  // TODO: Bundler API に投げる
-  // {"op": op} みたいな Request Body を Cloud Function の runOp に投げる
+  const op = api.createSignedUserOp({
+    target: to, // 送り先のアドレス
+    data: data, // 具体的な処理のデータ
+  });
+
+  // Bundler API を叩く
+  await fetch(BundlerRunOpRPCEndpoint, {
+    method: "POST",
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      "network": network,
+      "op": op,
+    }),
+  })
 };

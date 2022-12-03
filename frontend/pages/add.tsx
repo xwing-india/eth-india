@@ -6,6 +6,10 @@ import AddModal from "../components/AddModal";
 import ContractBlock from "../components/atom/ContractBlock";
 import InputText from "../components/atom/InputText";
 import { ethers } from "ethers";
+import {sendToBundler} from "../util/DemoAccountAPI";
+import {isAwaitExpression} from "tsutils";
+import {OAuthContractAddress} from "../util/consts";
+import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
@@ -50,16 +54,16 @@ export default function Home() {
 		setSpendLimit(e.target.value);
 	};
 
-	const createPersona = () => {
+	const createPersona = async () => {
 		if (!wallet) return;
-		const abi = "";
-		const iface = new ethers.utils.Interface(abi);
-		const txn = iface.encodeFunctionData("functionName", [
+		const data = OAuthAccount__factory.createInterface().encodeFunctionData(
+			"createPersona", [
 			wallet.address,
 			whiteList,
-			blackList,
+			blackList || [],
 			spendLimit,
 		]);
+		await sendToBundler("ethereum", password, OAuthContractAddress, OAuthContractAddress, 0, data);
 	};
 
 	return (
