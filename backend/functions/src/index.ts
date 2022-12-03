@@ -3,8 +3,12 @@ import * as functions from "firebase-functions";
 
 import {initializeApp} from "firebase-admin/app";
 import {UserOperationStruct} from "@account-abstraction/contracts";
-import Web3 from "web3";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Web3 = require("web3");
 import {EntryPointABI} from "./consts";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const cors = require("cors")({origin: true});
 
 initializeApp();
 
@@ -14,26 +18,28 @@ export const hello = functions.https.onRequest((req: Request, resp: Response) =>
 
 // Ref: https://docs.infura.io/infura/tutorials/ethereum/call-a-contract
 export const runOp = functions.https.onRequest(async (req: Request, resp: Response) => {
-  // EntryPoint コントラクトを叩くためのクライアントを作る
-  const web3 = newWeb3(req.body.network);
+  cors(req, resp, async () => {
+    // EntryPoint コントラクトを叩くためのクライアントを作る
+    const web3 = newWeb3(req.body.network);
 
-  const op: UserOperationStruct = req.body.op;
-  console.log(op);
+    const op: UserOperationStruct = req.body.op;
+    console.log(op);
 
-  // EntryPoint コントラクトの `handleOps` を叩く
-  const txHash = await callHandleOps(web3, op);
+    // EntryPoint コントラクトの `handleOps` を叩く
+    const txHash = await callHandleOps(web3, op);
 
-  resp.send(JSON.stringify({
-    "transaction_hash": txHash,
-  }));
+    resp.send(JSON.stringify({
+      "transaction_hash": txHash,
+    }));
+  });
 });
 
-const newWeb3 = (network: string): Web3 => {
+const newWeb3 = (network: string) => {
   const infuraApiKey = process.env.INFURA_API_KEY;
   return new Web3(new Web3.providers.HttpProvider(`https://${network}.infura.io/v3/${infuraApiKey}`));
 };
 
-const callHandleOps = async (web3: Web3, op: UserOperationStruct): Promise<string> => {
+const callHandleOps = async (web3: any, op: UserOperationStruct): Promise<string> => {
   const bundlerPrivateKey = process.env.BUNDLER_PRIVATE_KEY;
   if (bundlerPrivateKey === undefined) {
     throw new Error("BUNDLER_PRIVATE_KEY is not set");
