@@ -43,6 +43,16 @@ contract OAuthAccount is BaseAccount {
         owner = owner_;
     }
 
+    function transfer(address payable target, uint256 amount) external {
+        _validatePersonaPermission(msg.sender, target, amount);
+        target.transfer(amount);
+    }
+
+    function exec(address target, uint256 value, bytes calldata func) external {
+        _validatePersonaPermission(msg.sender, target, value);
+        _call(target, value, func);
+    }
+
     function execFromEntryPoint(
         address target,
         uint256 value,
@@ -71,26 +81,12 @@ contract OAuthAccount is BaseAccount {
         }
     }
 
-    function _validateAndUpdateNonce(
-        UserOperation calldata userOp
-    ) internal override {
-        require(_nonce++ == userOp.nonce, "account: invalid nonce");
-    }
-
-    function _validateSignature(
-        UserOperation calldata userOp,
-        bytes32 userOpHash,
-        address
-    ) internal virtual override returns (uint256 deadline) {
-        require(tx.origin == address(0), "account: tx origin is not zero");
-
-        (, address target, uint256 value) = parseCalldata(userOp.callData);
-        //Todo Require check funcHash
-
-        //TODO: check validate
-        bytes32 hash = userOpHash.toEthSignedMessageHash();
-        address recoverd = hash.recover(userOp.signature);
-        Persona storage persona = personas[recoverd];
+    function _validatePersonaPermission(
+        address personaAddress,
+        address target,
+        uint256 value
+    ) internal virtual {
+        Persona storage persona = personas[personaAddress];
 
         bool isAllow = persona.allowTargets.contains(target) ||
             persona.allowTargets.length() == 0; // Empty allowTargets is All Allow
@@ -114,6 +110,28 @@ contract OAuthAccount is BaseAccount {
             "account: persona balance is not enougth"
         );
         persona.balance -= value;
+    }
+
+    function _validateAndUpdateNonce(
+        UserOperation calldata userOp
+    ) internal override {
+        require(_nonce++ == userOp.nonce, "account: invalid nonce");
+    }
+
+    function _validateSignature(
+        UserOperation calldata userOp,
+        bytes32 userOpHash,
+        address
+    ) internal virtual override returns (uint256 deadline) {
+        require(tx.origin == address(0), "account: tx origin is not zero");
+        //Todo Require check funcHash
+
+        //TODO: check validate
+        bytes32 hash = userOpHash.toEthSignedMessageHash();
+        address recoverd = hash.recover(userOp.signature);
+        (, address target, uint256 value) = parseCalldata(userOp.callData);
+
+        _validatePersonaPermission(recoverd, target, value);
 
         return 0;
     }
