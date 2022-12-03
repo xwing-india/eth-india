@@ -17,21 +17,61 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BaseAccount__factory>;
     getContractFactory(
+      name: "BasePaymaster",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.BasePaymaster__factory>;
+    getContractFactory(
+      name: "EntryPoint",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.EntryPoint__factory>;
+    getContractFactory(
+      name: "SenderCreator",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SenderCreator__factory>;
+    getContractFactory(
+      name: "StakeManager",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.StakeManager__factory>;
+    getContractFactory(
       name: "IAccount",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IAccount__factory>;
+    getContractFactory(
+      name: "IAggregatedAccount",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IAggregatedAccount__factory>;
     getContractFactory(
       name: "IAggregator",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IAggregator__factory>;
     getContractFactory(
+      name: "ICreate2Deployer",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ICreate2Deployer__factory>;
+    getContractFactory(
       name: "IEntryPoint",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IEntryPoint__factory>;
     getContractFactory(
+      name: "IPaymaster",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPaymaster__factory>;
+    getContractFactory(
       name: "IStakeManager",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IStakeManager__factory>;
+    getContractFactory(
+      name: "Ownable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Ownable__factory>;
+    getContractFactory(
+      name: "TestCounter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TestCounter__factory>;
+    getContractFactory(
+      name: "DemoPaymaster",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DemoPaymaster__factory>;
     getContractFactory(
       name: "Lock",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -51,25 +91,75 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.BaseAccount>;
     getContractAt(
+      name: "BasePaymaster",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.BasePaymaster>;
+    getContractAt(
+      name: "EntryPoint",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.EntryPoint>;
+    getContractAt(
+      name: "SenderCreator",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SenderCreator>;
+    getContractAt(
+      name: "StakeManager",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.StakeManager>;
+    getContractAt(
       name: "IAccount",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IAccount>;
+    getContractAt(
+      name: "IAggregatedAccount",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IAggregatedAccount>;
     getContractAt(
       name: "IAggregator",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IAggregator>;
     getContractAt(
+      name: "ICreate2Deployer",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ICreate2Deployer>;
+    getContractAt(
       name: "IEntryPoint",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IEntryPoint>;
     getContractAt(
+      name: "IPaymaster",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPaymaster>;
+    getContractAt(
       name: "IStakeManager",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IStakeManager>;
+    getContractAt(
+      name: "Ownable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Ownable>;
+    getContractAt(
+      name: "TestCounter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TestCounter>;
+    getContractAt(
+      name: "DemoPaymaster",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DemoPaymaster>;
     getContractAt(
       name: "Lock",
       address: string,
