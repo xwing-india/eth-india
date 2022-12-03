@@ -85,7 +85,10 @@ contract OAuthAccount is BaseAccount {
         address[] calldata deny,
         uint112 balance
     ) external {
-        require(msg.sender == owner, "account: only owner can create persona");
+        require(
+            msg.sender == owner || msg.sender == address(this),
+            "account: only owner can create persona"
+        );
         _createPersona(PersonaData(signer, allow, deny, balance, 0x1));
     }
 
@@ -197,14 +200,16 @@ contract OAuthAccount is BaseAccount {
         bytes32 userOpHash,
         address
     ) internal virtual override returns (uint256 deadline) {
-        //Todo Require check funcHash
-
         //TODO: check validate
         bytes32 hash = userOpHash.toEthSignedMessageHash();
         address recoverd = hash.recover(userOp.signature);
         (bytes4 funcHash, address target, uint256 value) = parseCalldata(
             userOp.callData
         );
+
+        if (recoverd == owner) {
+            return 0;
+        }
 
         require(funcHash == 0x80c5c7d0, "account: invalid funcHash");
 

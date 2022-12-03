@@ -7,6 +7,7 @@
     "@account-abstraction/contracts": "^0.3.0",
     "@account-abstraction/sdk": "^0.3.0",
     "@openzeppelin/contracts": "^4.8.0",
+    "dotenv": "^16.0.3",
     "hardhat": "^2.12.3"
   },
   "devDependencies": {
