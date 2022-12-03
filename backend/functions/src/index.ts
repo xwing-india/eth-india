@@ -21,9 +21,11 @@ export const runOp = functions.https.onRequest(async (req: Request, resp: Respon
   console.log(op);
 
   // EntryPoint コントラクトの `handleOps` を叩く
-  await callHandleOps(web3, op);
+  const txHash = await callHandleOps(web3, op);
 
-  resp.send("{\"status\":\"success\"}");
+  resp.send(JSON.stringify({
+    "transaction_hash": txHash,
+  }));
 });
 
 const newWeb3 = (network: string): Web3 => {
@@ -31,7 +33,7 @@ const newWeb3 = (network: string): Web3 => {
   return new Web3(new Web3.providers.HttpProvider(`https://${network}.infura.io/v3/${infuraApiKey}`));
 };
 
-const callHandleOps = async (web3: Web3, op: UserOperationStruct) => {
+const callHandleOps = async (web3: Web3, op: UserOperationStruct): Promise<string> => {
   const bundlerPrivateKey = process.env.BUNDLER_PRIVATE_KEY;
   if (bundlerPrivateKey === undefined) {
     throw new Error("BUNDLER_PRIVATE_KEY is not set");
@@ -42,9 +44,12 @@ const callHandleOps = async (web3: Web3, op: UserOperationStruct) => {
 
   const contract = new web3.eth.Contract(JSON.parse(EntryPointABI), EntryPointContractAddress);
   const tx = contract.methods.handleOps([op], BundlerWalletAddress);
+  let txHash = "";
   await tx.send({
     from: signer.address,
     gas: await tx.estimateGas(),
+  }).on("transactionHash", (hash: string) => {
+    txHash = hash;
   });
-  // TODO: Transaction Hash でも返す？
+  return txHash;
 };
