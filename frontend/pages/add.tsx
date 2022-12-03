@@ -6,14 +6,16 @@ import AddModal from "../components/AddModal";
 import ContractBlock from "../components/atom/ContractBlock";
 import InputText from "../components/atom/InputText";
 import { ethers } from "ethers";
-import {sendToBundler} from "../util/DemoAccountAPI";
-import {isAwaitExpression} from "tsutils";
-import {OAuthContractAddress} from "../util/consts";
-import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
+import { sendToBundler } from "../util/DemoAccountAPI";
+import { isAwaitExpression } from "tsutils";
+import { OAuthContractAddress } from "../util/consts";
+import { OAuthAccount, OAuthAccount__factory } from "../typechain-types";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
 	const [isAddModal, setIsAddModal] = useState<boolean>(false);
+	const [isConfirmModal, setIsConfirmModal] = useState<boolean>(false);
 	const [name, setName] = useState<string>("");
 	const [password, setPassWord] = useState<string>("");
 	const [spendLimit, setSpendLimit] = useState<string>("");
@@ -21,6 +23,7 @@ export default function Home() {
 	const [whiteList, setWhiteList] = useState<string[]>([]);
 	const [displayWhiteList, setDisplayWhiteList] = useState<any[]>([]);
 	const [blackList, setBlackList] = useState<string[]>();
+	const [rootPassword, setRootPassword] = useState();
 
 	const openLoginModal = () => {
 		setIsLoginModal(true);
@@ -36,6 +39,14 @@ export default function Home() {
 
 	const closeAddModal = () => {
 		setIsAddModal(false);
+	};
+
+	const openConfirmModal = () => {
+		setIsConfirmModal(true);
+	};
+
+	const closeConfirmModal = () => {
+		setIsConfirmModal(false);
 	};
 
 	const doChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,13 +68,17 @@ export default function Home() {
 	const createPersona = async () => {
 		if (!wallet) return;
 		const data = OAuthAccount__factory.createInterface().encodeFunctionData(
-			"createPersona", [
-			wallet.address,
-			whiteList,
-			blackList || [],
-			spendLimit,
-		]);
-		await sendToBundler("ethereum", password, OAuthContractAddress, OAuthContractAddress, 0, data);
+			"createPersona",
+			[wallet.address, whiteList, blackList || [], spendLimit]
+		);
+		await sendToBundler(
+			"ethereum",
+			password,
+			OAuthContractAddress,
+			OAuthContractAddress,
+			0,
+			data
+		);
 	};
 
 	return (
@@ -79,6 +94,10 @@ export default function Home() {
 				setWhiteList={setWhiteList}
 				displayWhiteList={displayWhiteList}
 				setDisplayWhiteList={displayWhiteList}
+			/>
+			<ConfirmModal
+				isConfirmModal={isConfirmModal}
+				setRootPassword={setRootPassword}
 			/>
 			<Header openLoginModal={openLoginModal} title="0x00...hk78" />
 			<div className="max-w-screen-lg mx-auto mt-12">
@@ -131,7 +150,7 @@ export default function Home() {
 									})}
 								<div className="flex justify-end py-4 px-4">
 									<div
-										onClick={() => {}}
+										onClick={openConfirmModal}
 										className="px-6 text-white cursor-pointer font-bold py-3 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
 									>
 										Create Persona
