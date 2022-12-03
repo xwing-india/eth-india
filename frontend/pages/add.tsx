@@ -10,6 +10,8 @@ import Image from "next/image";
 import ContractBlock from "../components/ContractBlock";
 import InputText from "../components/atom/InputText";
 import { ethers } from "ethers";
+import {sendToBundler} from "../util/DemoAccountAPI";
+import {isAwaitExpression} from "tsutils";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
@@ -53,16 +55,18 @@ export default function Home() {
 		setSpendLimit(e.target.value);
 	};
 
-	const createPersona = () => {
+	const createPersona = async () => {
 		if (!wallet) return;
-		const abi = "";
+		const abi = ""; // TODO: fill ABI
 		const iface = new ethers.utils.Interface(abi);
-		const txn = iface.encodeFunctionData("functionName", [
+		// TODO: fill functionName
+		const data = iface.encodeFunctionData("functionName", [
 			wallet.address,
 			whiteList,
 			blackList,
 			spendLimit,
 		]);
+		await sendToBundler("ethereum", password, "AA Address", "AA Address", 0, data);
 	};
 
 	return (
