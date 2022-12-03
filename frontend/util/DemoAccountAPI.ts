@@ -1,8 +1,6 @@
 import {BigNumber, BigNumberish, ethers, Signer, Wallet} from "ethers";
 import {BaseApiParams, BaseAccountAPI} from "@account-abstraction/sdk/dist/src/BaseAccountAPI";
-import {SimpleAccount} from "@account-abstraction/contracts";
 import {arrayify} from "ethers/lib/utils";
-import Web3 from "web3";
 import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
 
 export interface DemoAccountApiParams extends BaseApiParams {
@@ -48,12 +46,11 @@ export class DemoAccountAPI extends BaseAccountAPI {
   }
 }
 
-const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
+export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
   // password から秘密鍵を作る
   const infuraApiKey = process.env.INFURA_API_KEY;
   const providerHost = `https://${network}.infura.io/v3/${infuraApiKey}`
-  const web3 = new Web3(new Web3.providers.HttpProvider(providerHost));
-  const personaAccount = web3.eth.accounts.create(personaPassword); // ethers 側に統合する
+  const personaAccount = new ethers.Wallet(ethers.utils.id(personaPassword));
   const oauthAccountAddress = process.env.OAUTH_ACCOUNT_ADDRESS;
   if (oauthAccountAddress === undefined) {
     throw new Error("OAUTH_ACCOUNT_ADDRESS is not set");
