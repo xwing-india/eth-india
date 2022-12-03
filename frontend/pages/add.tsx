@@ -12,6 +12,7 @@ import InputText from "../components/atom/InputText";
 import { ethers } from "ethers";
 import {sendToBundler} from "../util/DemoAccountAPI";
 import {isAwaitExpression} from "tsutils";
+import {OAuthContractAddress} from "../util/consts";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
@@ -66,7 +67,7 @@ export default function Home() {
 			blackList,
 			spendLimit,
 		]);
-		await sendToBundler("ethereum", password, "AA Address", "AA Address", 0, data);
+		await sendToBundler("ethereum", password, OAuthContractAddress, OAuthContractAddress, 0, data);
 	};
 
 	return (
