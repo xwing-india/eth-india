@@ -191,7 +191,11 @@ contract OAuthAccount is BaseAccount {
         //TODO: check validate
         bytes32 hash = userOpHash.toEthSignedMessageHash();
         address recoverd = hash.recover(userOp.signature);
-        (, address target, uint256 value) = parseCalldata(userOp.callData);
+        (bytes4 funcHash, address target, uint256 value) = parseCalldata(
+            userOp.callData
+        );
+
+        require(funcHash == 0x80c5c7d0, "account: invalid funcHash");
 
         _validatePersonaPermission(recoverd, target, value);
 
