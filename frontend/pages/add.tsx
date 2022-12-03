@@ -23,7 +23,7 @@ export default function Home() {
 	const [whiteList, setWhiteList] = useState<string[]>([]);
 	const [displayWhiteList, setDisplayWhiteList] = useState<any[]>([]);
 	const [blackList, setBlackList] = useState<string[]>();
-	const [rootPassword, setRootPassword] = useState();
+	const [rootPassword, setRootPassword] = useState<string>();
 
 	const openLoginModal = () => {
 		setIsLoginModal(true);
@@ -72,8 +72,8 @@ export default function Home() {
 			[wallet.address, whiteList, blackList || [], spendLimit]
 		);
 		await sendToBundler(
-			"mainnet",
-			password,
+			"goerli",
+			rootPassword || "",
 			OAuthContractAddress,
 			OAuthContractAddress,
 			0,
