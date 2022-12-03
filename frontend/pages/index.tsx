@@ -33,7 +33,6 @@ export default function Home() {
 				isLoginModal={isLoginModal}
 				closeLoginModal={closeLoginModal}
 			/>
-			<AddModal isAddModal={isAddModal} closeAddModal={closeAddModal} />
 			<Header openLoginModal={openLoginModal} />
 			<div className="max-w-screen-lg mx-auto mt-12">
 				<div className="grid grid-cols-4 gap-4">

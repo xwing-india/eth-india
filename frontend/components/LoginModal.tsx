@@ -53,14 +53,14 @@ const LoginModal: FC<Prop> = ({ isLoginModal, closeLoginModal }) => {
 						Login
 					</div>
 					<div className="px-4 pt-8">
-						<div className="flex justify-between text-black font-bold">
+						<div className="flex justify-between text-gray-700 font-bold">
 							<div>Address</div>
 							<input
 								onChange={doChangeAddress}
 								className="bg-white border border-gray-700 rounded-md"
 							></input>
 						</div>
-						<div className="flex justify-between text-black pt-4 font-bold">
+						<div className="flex justify-between text-gray-700 pt-4 font-bold">
 							<div>Password</div>
 							<input
 								onChange={doChangePassword}
