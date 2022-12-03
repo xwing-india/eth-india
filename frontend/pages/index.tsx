@@ -4,6 +4,8 @@ import Persona from "../components/organisms/Persona";
 import { useState } from "react";
 import LoginModal from "../components/LoginModal";
 import Link from "next/link";
+import Head from "next/head";
+import Footer from "../components/atom/Footer";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
@@ -26,7 +28,30 @@ export default function Home() {
 	};
 
 	return (
-		<div className="min-h-screen text-black bg-white isolate">
+		<div className="min-h-screen relative text-black bg-white isolate">
+			<Head>
+				<link
+					rel="apple-touch-icon"
+					sizes="180x180"
+					href="/apple-touch-icon.png"
+				/>
+				<link
+					rel="icon"
+					type="image/png"
+					sizes="32x32"
+					href="/favicon-32x32.png"
+				/>
+				<link
+					rel="icon"
+					type="image/png"
+					sizes="16x16"
+					href="/favicon-16x16.png"
+				/>
+				<link rel="manifest" href="/site.webmanifest" />
+				<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+				<meta name="msapplication-TileColor" content="#da532c" />
+				<meta name="theme-color" content="#ffffff"></meta>
+			</Head>
 			<Header openLoginModal={() => {}} title="Login by Demo" />
 			<div>
 				<div className="mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40">
@@ -34,27 +59,27 @@ export default function Home() {
 						One wallet Muti accounts
 					</h1>
 					<p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-					By creating accounts to manage the assets/authorities in a contract wallet, 
-					transaction history and SBT can be stored in a single contract wallet while increasing security.
+						By creating accounts to manage the assets/authorities in a contract
+						wallet(compliant with EIP-4337), transaction history and SBT can be
+						stored in a single contract wallet while increasing security.
 					</p>
-					<div className="mt-8 flex gap-x-4 sm:justify-center">
+					<div className="mt-8 flex sm:justify-center gap-3">
+						<div className="rounded-lg bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-[3px]">
+							<input
+								type="text"
+								className=" h-full w-full rounded-[5px] pl-2"
+								placeholder="Enter Address or ENS"
+							/>
+						</div>
 						<Link
 							href="/home"
-							className="px-6 text-white cursor-pointer font-bold pt-[10px] pb-2 text-sm rounded-lg bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
+							className="px-4 text-white cursor-pointer font-bold pt-[10px] pb-2 text-sm rounded-lg bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
 						>
 							Get Start
 						</Link>
-						<a
-							href="#"
-							className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-						>
-							Live demo
-							<span className="text-gray-400" aria-hidden="true">
-								&rarr;
-							</span>
-						</a>
 					</div>
 				</div>
+				<Footer />
 			</div>
 		</div>
 	);

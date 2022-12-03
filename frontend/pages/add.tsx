@@ -7,10 +7,11 @@ import ContractBlock from "../components/atom/ContractBlock";
 import InputText from "../components/atom/InputText";
 import { ethers } from "ethers";
 import { sendToBundler } from "../util/DemoAccountAPI";
-import { isAwaitExpression } from "tsutils";
 import { OAuthContractAddress } from "../util/consts";
 import { OAuthAccount, OAuthAccount__factory } from "../typechain-types";
 import ConfirmModal from "../components/ConfirmModal";
+import Button from "../components/atom/Button";
+import Footer from "../components/atom/Footer";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
@@ -82,7 +83,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className="bg-white min-h-screen">
+		<div className="bg-white min-h-screen relative">
 			<LoginModal
 				isLoginModal={isLoginModal}
 				closeLoginModal={closeLoginModal}
@@ -97,10 +98,11 @@ export default function Home() {
 			/>
 			<ConfirmModal
 				isConfirmModal={isConfirmModal}
+				closeConfirmModal={closeConfirmModal}
 				setRootPassword={setRootPassword}
 				createPersona={createPersona}
 			/>
-			<Header openLoginModal={openLoginModal} title="0x00...hk78" />
+			<Header openLoginModal={openLoginModal} title="vitalik.eth" />
 			<div className="max-w-screen-lg mx-auto mt-12">
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-4 mx-4">
 					<div className="col-span-1 hidden md:block">
@@ -115,10 +117,7 @@ export default function Home() {
 								</div>
 								<InputText title="name" doChange={doChangeName} />
 								<InputText title="password" doChange={doChangePassword} />
-								<InputText
-									title="spending limits"
-									doChange={doChangeSpendLimit}
-								/>
+								<InputText title="Budget Limit" doChange={doChangeSpendLimit} />
 								<div className="px-4">
 									<div className="flex justify-between py-2">
 										<div className="text-lg text-gray-700 font-bold">
@@ -134,34 +133,32 @@ export default function Home() {
 								</div>
 								<div className="border-y-2 border-gray-300 mt-4">
 									<div className="grid grid-cols-6 px-4 py-1 font-bold text-gray-500 text-[14px]">
-										<div className="col-span-1">icon</div>
-										<div className="col-span-1">name</div>
-										<div className="col-span-2">allow contract</div>
+										<div className="col-span-1">Icon</div>
+										<div className="col-span-1">Name</div>
+										<div className="col-span-2">Allow contract</div>
 									</div>
 								</div>
-								{displayWhiteList &&
-									displayWhiteList.map((item) => {
-										return (
-											<ContractBlock
-												src=""
-												name={item.name}
-												address={item.address}
-											/>
-										);
-									})}
+								<div className="mb-24">
+									{displayWhiteList &&
+										displayWhiteList.map((item) => {
+											return (
+												<ContractBlock
+													src=""
+													name={item.name}
+													address={item.address}
+												/>
+											);
+										})}
+								</div>
 								<div className="flex justify-end py-4 px-4">
-									<div
-										onClick={openConfirmModal}
-										className="px-6 text-white cursor-pointer font-bold py-3 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
-									>
-										Create Persona
-									</div>
+									<Button title="Create Persona" doClick={openConfirmModal} />
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<Footer />
 		</div>
 	);
 }

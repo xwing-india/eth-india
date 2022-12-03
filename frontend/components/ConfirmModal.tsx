@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import Modal from "react-modal";
+import Button from "./atom/Button";
 
 const customStyles: ReactModal.Styles = {
 	overlay: {
@@ -26,14 +27,14 @@ const customStyles: ReactModal.Styles = {
 
 type Prop = {
 	isConfirmModal: any;
-	// closeConfirmModal: any;
+	closeConfirmModal: any;
 	setRootPassword: any;
 	createPersona: () => void;
 };
 
 const ConfirmModal: FC<Prop> = ({
 	isConfirmModal,
-	// closeConfirmModal,
+	closeConfirmModal,
 	setRootPassword,
 	createPersona,
 }) => {
@@ -44,30 +45,25 @@ const ConfirmModal: FC<Prop> = ({
 	return (
 		<Modal
 			isOpen={isConfirmModal}
-			// onRequestClose={closeConfirmModal}
+			onRequestClose={closeConfirmModal}
 			style={customStyles}
 		>
 			<div className="w-full h-full bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-1 rounded-lg">
 				<div className="w-full h-full bg-white rounded-lg">
-					<div className=" text-center text-black pt-4 font-bold text-xl">
+					<div className=" text-center text-gray-700 pt-4 font-bold text-xl">
 						Create Persona
 					</div>
 					<div className="px-4 pt-8">
 						<div
 							onChange={doChangePassword}
-							className="flex justify-between text-gray-700 pt-4 font-bold"
+							className="flex justify-between text-gray-700 pt-4"
 						>
-							<div>password</div>
-							<input className="bg-white border border-gray-700 rounded-md"></input>
+							<div className="font-bold">Password</div>
+							<input className="pl-2 bg-white border border-gray-700 rounded-md"></input>
 						</div>
 					</div>
-					<div className="flex justify-center pt-8">
-						<div
-							onClick={createPersona}
-							className="px-6 text-white cursor-pointer font-bold py-2 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
-						>
-							Create Persona
-						</div>
+					<div className="flex justify-center pt-12">
+						<Button title="Create Persona" doClick={createPersona} />
 					</div>
 				</div>
 			</div>
