@@ -29,6 +29,8 @@ type Prop = {
 	closeAddModal: any;
 	whiteList: string[];
 	setWhiteList: any;
+	displayWhiteList: any;
+	setDisplayWhiteList: any;
 };
 
 const AddModal: FC<Prop> = ({
@@ -36,6 +38,8 @@ const AddModal: FC<Prop> = ({
 	closeAddModal,
 	whiteList,
 	setWhiteList,
+	displayWhiteList,
+	setDisplayWhiteList,
 }) => {
 	const [contractAddress, setContractAddress] = useState("");
 	const [name, setName] = useState("");
@@ -50,8 +54,15 @@ const AddModal: FC<Prop> = ({
 
 	const addContract = () => {
 		const tmpWhiteList = whiteList;
+		const tmpDisplayWhiteList = displayWhiteList;
+		const tmpGroup = {
+			name: name,
+			address: contractAddress,
+		};
 		tmpWhiteList.push(contractAddress);
+		tmpDisplayWhiteList.push(tmpGroup);
 		setWhiteList(tmpWhiteList);
+
 		closeAddModal();
 	};
 

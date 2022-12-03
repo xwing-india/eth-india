@@ -1,13 +1,9 @@
-import Header from "../components/Header";
-import LeftMenuBlock from "../components/LeftMenuBlock";
-import Persona from "../components/Persona";
-import ProfileBlock from "../components/ProfileBlock";
-import Modal from "react-modal";
+import Header from "../components/atom/Header";
+import LeftMenuBlock from "../components/molecules/LeftMenuBlock";
 import { useState } from "react";
 import LoginModal from "../components/LoginModal";
 import AddModal from "../components/AddModal";
-import Image from "next/image";
-import ContractBlock from "../components/ContractBlock";
+import ContractBlock from "../components/atom/ContractBlock";
 import InputText from "../components/atom/InputText";
 import { ethers } from "ethers";
 import {sendToBundler} from "../util/DemoAccountAPI";
@@ -22,6 +18,7 @@ export default function Home() {
 	const [spendLimit, setSpendLimit] = useState<string>("");
 	const [wallet, setWallet] = useState<ethers.Wallet>();
 	const [whiteList, setWhiteList] = useState<string[]>([]);
+	const [displayWhiteList, setDisplayWhiteList] = useState<any[]>([]);
 	const [blackList, setBlackList] = useState<string[]>();
 
 	const openLoginModal = () => {
@@ -47,7 +44,7 @@ export default function Home() {
 	const doChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPassWord(e.target.value);
 		const tmpWallet: ethers.Wallet = new ethers.Wallet(
-			ethers.utils.id(e.target.value)
+			ethers.utils.id(String(e.target.value))
 		);
 		setWallet(tmpWallet);
 	};
@@ -71,7 +68,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className="bg-white">
+		<div className="bg-white min-h-screen">
 			<LoginModal
 				isLoginModal={isLoginModal}
 				closeLoginModal={closeLoginModal}
@@ -81,11 +78,13 @@ export default function Home() {
 				closeAddModal={closeAddModal}
 				whiteList={whiteList}
 				setWhiteList={setWhiteList}
+				displayWhiteList={displayWhiteList}
+				setDisplayWhiteList={displayWhiteList}
 			/>
 			<Header openLoginModal={openLoginModal} />
 			<div className="max-w-screen-lg mx-auto mt-12">
-				<div className="grid grid-cols-4 gap-4">
-					<div className="col-span-1">
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-4 mx-4">
+					<div className="col-span-1 hidden md:block">
 						<LeftMenuBlock />
 					</div>
 					<div className="col-span-3 mb-24">
@@ -121,9 +120,15 @@ export default function Home() {
 										<div className="col-span-2">allow contract</div>
 									</div>
 								</div>
-								{whiteList &&
-									whiteList.map(() => {
-										return <ContractBlock />;
+								{displayWhiteList &&
+									displayWhiteList.map((item) => {
+										return (
+											<ContractBlock
+												src=""
+												name={item.name}
+												address={item.address}
+											/>
+										);
 									})}
 								<div className="flex justify-end py-4 px-4">
 									<div
