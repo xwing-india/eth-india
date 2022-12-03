@@ -28,7 +28,7 @@ export default function Home() {
 	};
 
 	return (
-		<div>
+		<div className="bg-white min-h-screen">
 			<LoginModal
 				isLoginModal={isLoginModal}
 				closeLoginModal={closeLoginModal}
