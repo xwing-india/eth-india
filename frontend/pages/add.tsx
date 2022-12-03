@@ -13,6 +13,7 @@ import { ethers } from "ethers";
 import {sendToBundler} from "../util/DemoAccountAPI";
 import {isAwaitExpression} from "tsutils";
 import {OAuthContractAddress} from "../util/consts";
+import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
@@ -58,13 +59,11 @@ export default function Home() {
 
 	const createPersona = async () => {
 		if (!wallet) return;
-		const abi = ""; // TODO: fill ABI
-		const iface = new ethers.utils.Interface(abi);
-		// TODO: fill functionName
-		const data = iface.encodeFunctionData("functionName", [
+		const data = OAuthAccount__factory.createInterface().encodeFunctionData(
+			"createPersona", [
 			wallet.address,
 			whiteList,
-			blackList,
+			blackList || [],
 			spendLimit,
 		]);
 		await sendToBundler("ethereum", password, OAuthContractAddress, OAuthContractAddress, 0, data);
