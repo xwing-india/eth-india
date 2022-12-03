@@ -9,13 +9,17 @@ import AddModal from "../components/AddModal";
 import Image from "next/image";
 import ContractBlock from "../components/ContractBlock";
 import InputText from "../components/atom/InputText";
+import { ethers } from "ethers";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
 	const [isAddModal, setIsAddModal] = useState<boolean>(false);
-	const [name, setName] = useState("");
-	const [password, setPassWord] = useState("");
-	const [spendLimit, setSpendLimit] = useState(0);
+	const [name, setName] = useState<string>("");
+	const [password, setPassWord] = useState<string>("");
+	const [spendLimit, setSpendLimit] = useState<string>("");
+	const [wallet, setWallet] = useState<ethers.Wallet>();
+	const [whiteList, setWhiteList] = useState<string[]>([]);
+	const [blackList, setBlackList] = useState<string[]>();
 
 	const openLoginModal = () => {
 		setIsLoginModal(true);
@@ -33,16 +37,32 @@ export default function Home() {
 		setIsAddModal(false);
 	};
 
-	const doChangeName = (e: any) => {
+	const doChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setName(e.target.value);
 	};
 
-	const doChangePassword = (e: any) => {
+	const doChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPassWord(e.target.value);
+		const tmpWallet: ethers.Wallet = new ethers.Wallet(
+			ethers.utils.id(e.target.value)
+		);
+		setWallet(tmpWallet);
 	};
 
-	const doChangeSpendLimit = (e: any) => {
+	const doChangeSpendLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSpendLimit(e.target.value);
+	};
+
+	const createPersona = () => {
+		if (!wallet) return;
+		const abi = "";
+		const iface = new ethers.utils.Interface(abi);
+		const txn = iface.encodeFunctionData("functionName", [
+			wallet.address,
+			whiteList,
+			blackList,
+			spendLimit,
+		]);
 	};
 
 	return (
@@ -51,7 +71,12 @@ export default function Home() {
 				isLoginModal={isLoginModal}
 				closeLoginModal={closeLoginModal}
 			/>
-			<AddModal isAddModal={isAddModal} closeAddModal={closeAddModal} />
+			<AddModal
+				isAddModal={isAddModal}
+				closeAddModal={closeAddModal}
+				whiteList={whiteList}
+				setWhiteList={setWhiteList}
+			/>
 			<Header openLoginModal={openLoginModal} />
 			<div className="max-w-screen-lg mx-auto mt-12">
 				<div className="grid grid-cols-4 gap-4">
@@ -73,7 +98,7 @@ export default function Home() {
 								/>
 								<div className="px-4">
 									<div className="flex justify-between py-2">
-										<div className="text-xl text-gray-700 font-bold">
+										<div className="text-lg text-gray-700 font-bold">
 											Allow Contract
 										</div>
 										<button
@@ -91,12 +116,13 @@ export default function Home() {
 										<div className="col-span-2">allow contract</div>
 									</div>
 								</div>
-								<ContractBlock />
-								<ContractBlock />
-								<ContractBlock />
+								{whiteList &&
+									whiteList.map(() => {
+										return <ContractBlock />;
+									})}
 								<div className="flex justify-end py-4 px-4">
 									<div
-										onClick={openAddModal}
+										onClick={() => {}}
 										className="px-6 text-white cursor-pointer font-bold py-3 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
 									>
 										Create Persona
