@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FC } from "react";
+import Avatar from "boring-avatars";
 
 type Prop = {
 	src: string;
@@ -12,12 +13,11 @@ const ContractBlock: FC<Prop> = ({ src, name, address }) => {
 		<div className="grid grid-cols-6 h-[72px] items-center px-4">
 			<div className="col-span-1  flex justify-start">
 				<div className="p-4 rounded-full  relative">
-					<Image
-						src="/images/opensea.png"
-						layout="fill"
-						objectFit="cover"
-						className="rounded-lg"
-						alt=""
+					<Avatar
+						size={36}
+						name={name}
+						variant="marble"
+						colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
 					/>
 				</div>
 			</div>

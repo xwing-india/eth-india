@@ -76,7 +76,7 @@ export default function Home() {
 				displayWhiteList={displayWhiteList}
 				setDisplayWhiteList={displayWhiteList}
 			/>
-			<Header openLoginModal={openLoginModal} />
+			<Header openLoginModal={openLoginModal} title="0x00...hk78" />
 			<div className="max-w-screen-lg mx-auto mt-12">
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-4 mx-4">
 					<div className="col-span-1 hidden md:block">
