@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FC } from "react";
-import ProfileBlock from "./ProfileBlock";
+import ProfileBlock from "../atom/ProfileBlock";
 
 type Prop = {
 	openAddModal: any;

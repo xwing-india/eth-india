@@ -1,11 +1,8 @@
-import Header from "../components/Header";
-import LeftMenuBlock from "../components/LeftMenuBlock";
-import Persona from "../components/Persona";
-import ProfileBlock from "../components/ProfileBlock";
-import Modal from "react-modal";
+import Header from "../components/atom/Header";
+import LeftMenuBlock from "../components/molecules/LeftMenuBlock";
+import Persona from "../components/organisms/Persona";
 import { useState } from "react";
 import LoginModal from "../components/LoginModal";
-import AddModal from "../components/AddModal";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
@@ -34,12 +31,12 @@ export default function Home() {
 				closeLoginModal={closeLoginModal}
 			/>
 			<Header openLoginModal={openLoginModal} />
-			<div className="max-w-screen-lg mx-auto mt-12">
-				<div className="grid grid-cols-4 gap-4">
-					<div className="col-span-1">
+			<div className="max-w-screen-lg mx-auto mt-12 pb-12">
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-4 mx-4">
+					<div className="col-span-1 hidden md:block">
 						<LeftMenuBlock />
 					</div>
-					<div className="col-span-3">
+					<div className="col-span-1 md:col-span-3">
 						<Persona openAddModal={openAddModal} />
 					</div>
 				</div>
