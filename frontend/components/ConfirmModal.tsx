@@ -28,12 +28,14 @@ type Prop = {
 	isConfirmModal: any;
 	// closeConfirmModal: any;
 	setRootPassword: any;
+	createPersona: () => void;
 };
 
 const ConfirmModal: FC<Prop> = ({
 	isConfirmModal,
 	// closeConfirmModal,
 	setRootPassword,
+	createPersona,
 }) => {
 	const doChangePassword = (e: any) => {
 		setRootPassword(e.target.value);
@@ -61,7 +63,7 @@ const ConfirmModal: FC<Prop> = ({
 					</div>
 					<div className="flex justify-center pt-8">
 						<div
-							onClick={() => {}}
+							onClick={createPersona}
 							className="px-6 text-white cursor-pointer font-bold py-2 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
 						>
 							Create Persona

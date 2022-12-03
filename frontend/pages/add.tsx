@@ -72,7 +72,7 @@ export default function Home() {
 			[wallet.address, whiteList, blackList || [], spendLimit]
 		);
 		await sendToBundler(
-			"ethereum",
+			"mainnet",
 			password,
 			OAuthContractAddress,
 			OAuthContractAddress,
@@ -98,6 +98,7 @@ export default function Home() {
 			<ConfirmModal
 				isConfirmModal={isConfirmModal}
 				setRootPassword={setRootPassword}
+				createPersona={createPersona}
 			/>
 			<Header openLoginModal={openLoginModal} title="0x00...hk78" />
 			<div className="max-w-screen-lg mx-auto mt-12">
