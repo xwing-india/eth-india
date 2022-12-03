@@ -11,7 +11,7 @@ const Persona: FC<Prop> = ({ openAddModal }) => {
 		<div className="h-[503px] rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-1">
 			<div className="h-full  w-full items-center justify-center bg-white rounded-lg">
 				<div className="flex justify-between items-center h-[72px] px-4">
-					<div className="text-2xl">Persona</div>
+					<div className="text-2xl text-black">Persona</div>
 					<div className="px-6 text-white cursor-pointer font-bold py-2 text-sm rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500">
 						<Link href="/add">Add</Link>
 					</div>

@@ -13,6 +13,9 @@ import InputText from "../components/atom/InputText";
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
 	const [isAddModal, setIsAddModal] = useState<boolean>(false);
+	const [name, setName] = useState("");
+	const [password, setPassWord] = useState("");
+	const [spendLimit, setSpendLimit] = useState(0);
 
 	const openLoginModal = () => {
 		setIsLoginModal(true);
@@ -30,8 +33,20 @@ export default function Home() {
 		setIsAddModal(false);
 	};
 
+	const doChangeName = (e: any) => {
+		setName(e.target.value);
+	};
+
+	const doChangePassword = (e: any) => {
+		setPassWord(e.target.value);
+	};
+
+	const doChangeSpendLimit = (e: any) => {
+		setSpendLimit(e.target.value);
+	};
+
 	return (
-		<div>
+		<div className="bg-white">
 			<LoginModal
 				isLoginModal={isLoginModal}
 				closeLoginModal={closeLoginModal}
@@ -43,16 +58,19 @@ export default function Home() {
 					<div className="col-span-1">
 						<LeftMenuBlock />
 					</div>
-					<div className="col-span-3">
+					<div className="col-span-3 mb-24">
 						<div className=" rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-1">
 							<div className="h-full  w-full items-center justify-center bg-white rounded-lg">
 								<div className="flex justify-between items-center h-[72px] px-4">
-									<div className="text-2xl">Add Persona</div>
+									<div className="text-2xl text-black">Add Persona</div>
 									<div></div>
 								</div>
-								<InputText title="name" />
-								<InputText title="password" />
-								<InputText title="value" />
+								<InputText title="name" doChange={doChangeName} />
+								<InputText title="password" doChange={doChangePassword} />
+								<InputText
+									title="spending limits"
+									doChange={doChangeSpendLimit}
+								/>
 								<div className="px-4">
 									<div className="flex justify-between py-2">
 										<div className="text-xl text-gray-700 font-bold">
