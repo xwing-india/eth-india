@@ -72,7 +72,7 @@ export default function Home() {
 				closeUpModal={closeUpModal}
 				addInfo={addInfo}
 			/>
-			<Header openLoginModal={openLoginModal} title="0x00...hk78" />
+			<Header openLoginModal={openLoginModal} title="vitalik.eth" />
 			<div className="max-w-screen-lg mx-auto mt-12 pb-12">
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-4 mx-4">
 					<div className="col-span-1 hidden md:block">
