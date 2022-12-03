@@ -12,6 +12,10 @@ import {
 
 initializeApp();
 
+export const hello = functions.https.onRequest((req: Request, resp: Response) => {
+  resp.send(JSON.stringify({message: "Hello!"}));
+});
+
 // Ref: https://docs.infura.io/infura/tutorials/ethereum/call-a-contract
 export const runOp = functions.https.onRequest(async (req: Request, resp: Response) => {
   // EntryPoint コントラクトを叩くためのクライアントを作る
