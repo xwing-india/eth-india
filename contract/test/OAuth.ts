@@ -28,6 +28,9 @@ describe("OAuth", () => {
     );
     await oauthAccount.deployed();
 
+    await paymaster.addStake(10, { value: ethers.utils.parseEther("10") });
+    await paymaster.deposit({ value: ethers.utils.parseEther("10") });
+
     const Counter = await ethers.getContractFactory("TestCounter");
     const counter = await Counter.deploy();
     await counter.deployed();
@@ -41,8 +44,8 @@ describe("OAuth", () => {
       .connect(addr1)
       .createPersona(
         p1.address,
-        [],
-        [target.address, counter.address],
+        [counter.address],
+        [target.address],
         ethers.utils.parseEther("1.2")
       );
     //   console.log(await oauthAccount.getPersona(p1.address));
@@ -50,15 +53,19 @@ describe("OAuth", () => {
       provider: ethers.provider,
       entryPointAddress: entryPoint.address,
       accountAddress: oauthAccount.address,
-      //  paymasterAPI: { getPaymasterAndData: async () => paymaster.address },
-      owner: addr1,
+
+      paymasterAPI: { getPaymasterAndData: async () => paymaster.address },
+      owner: p1,
     });
     const op = await addr1Api.createSignedUserOp({
       target: counter.address,
       data: counter.interface.encodeFunctionData("justemit"),
     });
 
+    console.log(await ethers.provider.getBalance(owner.address));
+
     const tx = await entryPoint.handleOps([op], owner.address);
-    console.log(JSON.stringify(await tx.wait()));
+    // console.log(JSON.stringify(await tx.wait()));
+    console.log(await ethers.provider.getBalance(owner.address));
   });
 });
