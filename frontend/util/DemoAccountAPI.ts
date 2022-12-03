@@ -2,6 +2,11 @@ import {BigNumber, BigNumberish, ethers, Signer, Wallet} from "ethers";
 import {BaseApiParams, BaseAccountAPI} from "@account-abstraction/sdk/dist/src/BaseAccountAPI";
 import {arrayify} from "ethers/lib/utils";
 import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
+import {
+  OAuthContractAddress,
+  EntryPointContractAddress,
+  BundlerRunOpRPCEndpoint,
+} from "./consts";
 
 export interface DemoAccountApiParams extends BaseApiParams {
   personaSigner: Signer;
@@ -51,16 +56,12 @@ export const sendToBundler = async (network: string, personaPassword: string, fr
   const infuraApiKey = process.env.INFURA_API_KEY;
   const providerHost = `https://${network}.infura.io/v3/${infuraApiKey}`
   const personaAccount = new ethers.Wallet(ethers.utils.id(personaPassword));
-  const oauthAccountAddress = process.env.OAUTH_ACCOUNT_ADDRESS;
-  if (oauthAccountAddress === undefined) {
-    throw new Error("OAUTH_ACCOUNT_ADDRESS is not set");
-  }
 
   // UserOperation の組み立て
   const api = new DemoAccountAPI({
-    accountContract: OAuthAccount__factory.connect(oauthAccountAddress, ethers.getDefaultProvider(providerHost)),
+    accountContract: OAuthAccount__factory.connect(OAuthContractAddress, ethers.getDefaultProvider(providerHost)),
     personaSigner: new Wallet(personaAccount.privateKey),
-    entryPointAddress: "",
+    entryPointAddress: EntryPointContractAddress,
     provider: ethers.getDefaultProvider(providerHost),
   })
 
@@ -70,11 +71,7 @@ export const sendToBundler = async (network: string, personaPassword: string, fr
   });
 
   // Bundler API を叩く
-  const bundlerEndpoint = process.env.BUNDLER_ENDPOINT;
-  if (bundlerEndpoint === undefined) {
-    throw new Error("BUNDLER_ENDPOINT is not set");
-  }
-  await fetch(bundlerEndpoint, {
+  await fetch(BundlerRunOpRPCEndpoint, {
     method: "POST",
     headers: {
       'content-type': 'application/json',
