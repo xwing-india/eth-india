@@ -43,8 +43,8 @@ const Persona: FC<Prop> = ({ openAddModal }) => {
 					<div className="grid grid-cols-7 px-4 py-1 font-bold text-gray-500 text-[14px]">
 						<div className="col-span-1">Icon</div>
 						<div className="col-span-2">Name</div>
-						<div className="col-span-2">Allow Contract</div>
-						<div className="col-span-2">Spend Limit</div>
+						<div className="col-span-2">Allowed Contracts</div>
+						<div className="col-span-2">Budget Limit</div>
 					</div>
 				</div>
 				<>
