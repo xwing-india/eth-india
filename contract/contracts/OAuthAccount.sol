@@ -18,9 +18,17 @@ contract OAuthAccount is BaseAccount {
     struct Persona {
         address creator;
         EnumerableSet.AddressSet allowTargets;
-        EnumerableSet.AddressSet denyTarges;
-        uint256 balance;
-        uint256 mode; // 0x1:personal, 0x10:sharing,
+        EnumerableSet.AddressSet denyTargets;
+        uint112 balance;
+        uint112 mode; // 0x1:personal, 0x10:sharing,
+    }
+
+    struct PersonaData {
+        address creator;
+        address[] allowTargets;
+        address[] denyTargets;
+        uint112 balance;
+        uint112 mode;
     }
 
     uint96 private _nonce;
@@ -72,7 +80,7 @@ contract OAuthAccount is BaseAccount {
         address signer,
         address[] calldata allow,
         address[] calldata deny,
-        uint256 balance
+        uint112 balance
     ) external {
         require(msg.sender == owner, "account: only owner can create persona");
         Persona storage persona = personas[signer];
@@ -82,7 +90,7 @@ contract OAuthAccount is BaseAccount {
             persona.allowTargets.add(allow[i]);
         }
         for (uint256 i = 0; i < deny.length; i++) {
-            persona.denyTarges.add(deny[i]);
+            persona.denyTargets.add(deny[i]);
         }
         persona.balance = balance;
         personaAddresses.push(signer);
@@ -105,9 +113,9 @@ contract OAuthAccount is BaseAccount {
             persona.allowTargets.add(allow[i]);
         }
         for (uint256 i = 0; i < deny.length; i++) {
-            persona.denyTarges.add(deny[i]);
+            persona.denyTargets.add(deny[i]);
         }
-        persona.balance = msg.value;
+        persona.balance = uint112(msg.value);
         personaAddresses.push(signer);
         emit PersonaCreated(signer, msg.sender, persona.mode);
     }
@@ -149,11 +157,11 @@ contract OAuthAccount is BaseAccount {
 
         bool isAllow = persona.allowTargets.contains(target) ||
             persona.allowTargets.length() == 0; // Empty allowTargets is All Allow
-        bool isDeny = persona.denyTarges.contains(target) ||
-            persona.denyTarges.length() == 0; // Empty denyTarges is All Deny
+        bool isDeny = persona.denyTargets.contains(target) ||
+            persona.denyTargets.length() == 0; // Empty denyTargets is All Deny
         require(
             (isAllow && !isDeny) ||
-                (isAllow && persona.denyTarges.length() == 0) ||
+                (isAllow && persona.denyTargets.length() == 0) ||
                 (!isDeny && persona.allowTargets.length() == 0),
             "account: wrong signature"
         );
@@ -168,7 +176,7 @@ contract OAuthAccount is BaseAccount {
             value > persona.balance,
             "account: persona balance is not enougth"
         );
-        persona.balance -= value;
+        persona.balance -= uint112(value);
     }
 
     function _validateAndUpdateNonce(
@@ -198,5 +206,41 @@ contract OAuthAccount is BaseAccount {
     function _updateEntryPoint(address newEntryPoint) internal override {
         emit EntryPointChanged(address(_entryPoint), newEntryPoint);
         _entryPoint = IEntryPoint(payable(newEntryPoint));
+    }
+
+    function totalPersona() external view returns (uint256) {
+        return personaAddresses.length;
+    }
+
+    function getPersona(
+        address personaAddress
+    ) external view returns (PersonaData memory) {
+        Persona storage persona = personas[personaAddress];
+        return
+            PersonaData(
+                persona.creator,
+                persona.allowTargets.values(),
+                persona.denyTargets.values(),
+                persona.balance,
+                persona.mode
+            );
+    }
+
+    function getPersonaByIndex(
+        uint256 index
+    ) external view returns (address, PersonaData memory) {
+        address personaAddress = personaAddresses[index];
+        Persona storage persona = personas[personaAddress];
+
+        return (
+            personaAddress,
+            PersonaData(
+                personaAddress,
+                persona.allowTargets.values(),
+                persona.denyTargets.values(),
+                persona.balance,
+                persona.mode
+            )
+        );
     }
 }
