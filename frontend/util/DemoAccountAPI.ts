@@ -3,10 +3,11 @@ import {BaseApiParams, BaseAccountAPI} from "@account-abstraction/sdk/dist/src/B
 import {SimpleAccount} from "@account-abstraction/contracts";
 import {arrayify} from "ethers/lib/utils";
 import Web3 from "web3";
+import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
 
 export interface DemoAccountApiParams extends BaseApiParams {
   personaSigner: Signer;
-  accountContract: SimpleAccount;
+  accountContract: OAuthAccount;
 }
 
 export class DemoAccountAPI extends BaseAccountAPI {
@@ -14,7 +15,7 @@ export class DemoAccountAPI extends BaseAccountAPI {
   personaSigner: Signer;
 
   // AA に接続するインスタンス
-  accountContract: SimpleAccount;
+  accountContract: OAuthAccount;
 
   constructor(params: DemoAccountApiParams) {
     super(params);
@@ -47,16 +48,20 @@ export class DemoAccountAPI extends BaseAccountAPI {
   }
 }
 
-const send = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
+const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
   // password から秘密鍵を作る
   const infuraApiKey = process.env.INFURA_API_KEY;
   const providerHost = `https://${network}.infura.io/v3/${infuraApiKey}`
   const web3 = new Web3(new Web3.providers.HttpProvider(providerHost));
   const personaAccount = web3.eth.accounts.create(personaPassword); // ethers 側に統合する
+  const oauthAccountAddress = process.env.OAUTH_ACCOUNT_ADDRESS;
+  if (oauthAccountAddress === undefined) {
+    throw new Error("OAUTH_ACCOUNT_ADDRESS is not set");
+  }
 
   // UserOperation の組み立て
   const api = new DemoAccountAPI({
-    accountContract: undefined, // TODO: AA ウォレットへのアクセス用インスタンスを作る
+    accountContract: OAuthAccount__factory.connect(oauthAccountAddress, ethers.getDefaultProvider(providerHost)),
     personaSigner: new Wallet(personaAccount.privateKey),
     entryPointAddress: "",
     provider: ethers.getDefaultProvider(providerHost),
@@ -64,7 +69,7 @@ const send = async (network: string, personaPassword: string, from: string, to: 
 
   const op = api.createSignedUserOp({
     target: to, // 送り先のアドレス
-    data: data, // TODO: 具体的な処理のデータ
+    data: data, // 具体的な処理のデータ
   });
 
   // Bundler API を叩く
