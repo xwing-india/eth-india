@@ -133,7 +133,7 @@ contract OAuthAccount is BaseAccount {
         bytes memory data
     ) public pure returns (bytes4 funcHash, address target, uint256 value) {
         assembly {
-            funcHash := mload(add(data, 4))
+            funcHash := mload(add(data, 32))
             target := mload(add(data, 36))
             value := mload(add(data, 68))
         }
@@ -159,14 +159,17 @@ contract OAuthAccount is BaseAccount {
             persona.allowTargets.length() == 0; // Empty allowTargets is All Allow
         bool isDeny = persona.denyTargets.contains(target) ||
             persona.denyTargets.length() == 0; // Empty denyTargets is All Deny
+
         require(
             (isAllow && !isDeny) ||
-                (isAllow && persona.denyTargets.length() == 0),
+                (isAllow && persona.denyTargets.length() == 0) ||
+                tx.origin == address(0),
             "account: wrong signature"
         );
 
         uint256 myBalance = address(this).balance;
-        console.log(persona.mode == 0x10);
+
+        require(persona.mode != 0, "account: not a persona");
         require(
             myBalance > value &&
                 (persona.mode == 0x10 || myBalance - value >= sharingBalance),
@@ -194,7 +197,6 @@ contract OAuthAccount is BaseAccount {
         bytes32 userOpHash,
         address
     ) internal virtual override returns (uint256 deadline) {
-        require(tx.origin == address(0), "account: tx origin is not zero");
         //Todo Require check funcHash
 
         //TODO: check validate

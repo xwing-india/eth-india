@@ -28,6 +28,10 @@ describe("OAuth", () => {
     );
     await oauthAccount.deployed();
 
+    const Counter = await ethers.getContractFactory("TestCounter");
+    const counter = await Counter.deploy();
+    await counter.deployed();
+
     await owner.sendTransaction({
       to: oauthAccount.address,
       value: ethers.utils.parseEther("1"),
@@ -37,19 +41,24 @@ describe("OAuth", () => {
       .connect(addr1)
       .createPersona(
         p1.address,
-        [target.address],
         [],
+        [target.address, counter.address],
         ethers.utils.parseEther("1.2")
       );
-    await oauthAccount.connect(addr1).approve(owner.address);
-    await oauthAccount.createSharingPersona(p2.address, [target.address], [], {
-      value: ethers.utils.parseEther("1"),
+    //   console.log(await oauthAccount.getPersona(p1.address));
+    const addr1Api = new SimpleAccountAPI({
+      provider: ethers.provider,
+      entryPointAddress: entryPoint.address,
+      accountAddress: oauthAccount.address,
+      //  paymasterAPI: { getPaymasterAndData: async () => paymaster.address },
+      owner: addr1,
+    });
+    const op = await addr1Api.createSignedUserOp({
+      target: counter.address,
+      data: counter.interface.encodeFunctionData("justemit"),
     });
 
-    console.log(
-      ethers.utils.formatEther(
-        await ethers.provider.getBalance(oauthAccount.address)
-      )
-    );
+    const tx = await entryPoint.handleOps([op], owner.address);
+    console.log(JSON.stringify(await tx.wait()));
   });
 });
