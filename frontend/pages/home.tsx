@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import LoginModal from "../components/LoginModal";
 import { useRouter } from "next/router";
 import UpModal from "../components/UpModal";
+import Footer from "../components/atom/Footer";
 
 export default function Home() {
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
@@ -62,7 +63,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className="bg-white min-h-screen">
+		<div className="bg-white min-h-screen relative">
 			<LoginModal
 				isLoginModal={isLoginModal}
 				closeLoginModal={closeLoginModal}
@@ -83,6 +84,7 @@ export default function Home() {
 					</div>
 				</div>
 			</div>
+			<Footer />
 		</div>
 	);
 }

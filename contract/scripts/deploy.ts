@@ -1,18 +1,21 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const EntryPoint = await ethers.getContractFactory("EntryPoint");
+  const entryPoint = await EntryPoint.deploy();
+  await entryPoint.deployed();
 
-  const lockedAmount = ethers.utils.parseEther("1");
+  const OAuthDeployer = await ethers.getContractFactory("OAuthAccountDeployer");
+  const oauthDeployer = await OAuthDeployer.deploy();
+  await oauthDeployer.deployed();
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  const Paymaster = await ethers.getContractFactory("DemoPaymaster");
+  const paymaster = await Paymaster.deploy(entryPoint.address);
+  await paymaster.deployed();
 
-  await lock.deployed();
-
-  console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
+  console.log("EntryPoint deployed to:", entryPoint.address);
+  console.log("OAuthDeployer deployed to:", oauthDeployer.address);
+  console.log("Paymaster deployed to:", paymaster.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.12;
+
 import "@account-abstraction/contracts/core/BaseAccount.sol";
+import "@account-abstraction/contracts/core/EntryPoint.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "hardhat/console.sol";
 
 contract OAuthAccount is BaseAccount {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -31,10 +34,10 @@ contract OAuthAccount is BaseAccount {
         uint112 mode;
     }
 
-    uint96 private _nonce;
     IEntryPoint private _entryPoint;
     address public owner;
-    uint256 public sharingBalance;
+    uint96 private _nonce;
+    uint112 public sharingBalance;
 
     mapping(address => Persona) private personas;
     address[] personaAddresses;
@@ -95,6 +98,8 @@ contract OAuthAccount is BaseAccount {
             _approved[msg.sender],
             "account: only owner can create persona"
         );
+        _approved[msg.sender] = false;
+        sharingBalance += uint112(msg.value);
         _createPersona(
             PersonaData(signer, allow, deny, uint112(msg.value), 0x10)
         );
@@ -128,7 +133,7 @@ contract OAuthAccount is BaseAccount {
         bytes memory data
     ) public pure returns (bytes4 funcHash, address target, uint256 value) {
         assembly {
-            funcHash := mload(add(data, 4))
+            funcHash := mload(add(data, 32))
             target := mload(add(data, 36))
             value := mload(add(data, 68))
         }
@@ -154,24 +159,31 @@ contract OAuthAccount is BaseAccount {
             persona.allowTargets.length() == 0; // Empty allowTargets is All Allow
         bool isDeny = persona.denyTargets.contains(target) ||
             persona.denyTargets.length() == 0; // Empty denyTargets is All Deny
+
         require(
             (isAllow && !isDeny) ||
                 (isAllow && persona.denyTargets.length() == 0) ||
-                (!isDeny && persona.allowTargets.length() == 0),
+                tx.origin == address(0),
             "account: wrong signature"
         );
 
         uint256 myBalance = address(this).balance;
 
+        require(persona.mode != 0, "account: not a persona");
         require(
-            persona.mode == 0x1 && myBalance - value > sharingBalance,
+            myBalance > value &&
+                (persona.mode == 0x10 || myBalance - value >= sharingBalance),
             "account: personal balance is not enougth"
         );
         require(
-            value > persona.balance,
+            persona.balance >= value && myBalance >= value,
             "account: persona balance is not enougth"
         );
         persona.balance -= uint112(value);
+
+        if (persona.mode == 0x10) {
+            sharingBalance -= uint112(value);
+        }
     }
 
     function _validateAndUpdateNonce(
@@ -185,7 +197,6 @@ contract OAuthAccount is BaseAccount {
         bytes32 userOpHash,
         address
     ) internal virtual override returns (uint256 deadline) {
-        require(tx.origin == address(0), "account: tx origin is not zero");
         //Todo Require check funcHash
 
         //TODO: check validate
