@@ -8,7 +8,15 @@ contract OAuthAccount is BaseAccount {
     using EnumerableSet for EnumerableSet.AddressSet;
     using ECDSA for bytes32;
 
+    event PersonaCreated(
+        address indexed persona,
+        address indexed creator,
+        uint256 mode
+    );
+    event Approval(address indexed spender);
+
     struct Persona {
+        address creator;
         EnumerableSet.AddressSet allowTargets;
         EnumerableSet.AddressSet denyTarges;
         uint256 balance;
@@ -22,6 +30,8 @@ contract OAuthAccount is BaseAccount {
 
     mapping(address => Persona) private personas;
     address[] personaAddresses;
+
+    mapping(address => bool) private _approved;
 
     function nonce() public view virtual override returns (uint256) {
         return _nonce;
@@ -51,6 +61,55 @@ contract OAuthAccount is BaseAccount {
     function exec(address target, uint256 value, bytes calldata func) external {
         _validatePersonaPermission(msg.sender, target, value);
         _call(target, value, func);
+    }
+
+    function approve(address spender) external {
+        _approved[spender] = true;
+        emit Approval(spender);
+    }
+
+    function createPersona(
+        address signer,
+        address[] calldata allow,
+        address[] calldata deny,
+        uint256 balance
+    ) external {
+        require(msg.sender == owner, "account: only owner can create persona");
+        Persona storage persona = personas[signer];
+        persona.creator = msg.sender;
+        persona.mode = 0x1; //set as personal
+        for (uint256 i = 0; i < allow.length; i++) {
+            persona.allowTargets.add(allow[i]);
+        }
+        for (uint256 i = 0; i < deny.length; i++) {
+            persona.denyTarges.add(deny[i]);
+        }
+        persona.balance = balance;
+        personaAddresses.push(signer);
+        emit PersonaCreated(signer, msg.sender, persona.mode);
+    }
+
+    function createSharingPersona(
+        address signer,
+        address[] calldata allow,
+        address[] calldata deny
+    ) external payable {
+        require(
+            _approved[msg.sender],
+            "account: only owner can create persona"
+        );
+        Persona storage persona = personas[signer];
+        persona.creator = msg.sender;
+        persona.mode = 0x10; //set as sharing
+        for (uint256 i = 0; i < allow.length; i++) {
+            persona.allowTargets.add(allow[i]);
+        }
+        for (uint256 i = 0; i < deny.length; i++) {
+            persona.denyTarges.add(deny[i]);
+        }
+        persona.balance = msg.value;
+        personaAddresses.push(signer);
+        emit PersonaCreated(signer, msg.sender, persona.mode);
     }
 
     function execFromEntryPoint(
