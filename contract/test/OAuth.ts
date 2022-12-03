@@ -1,5 +1,6 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
+import { SimpleAccountAPI } from "@account-abstraction/sdk";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
@@ -32,9 +33,23 @@ describe("OAuth", () => {
       value: ethers.utils.parseEther("1"),
     });
 
-    await oauthAccount.connect(addr1).createPersona(p1.address, [], [], 1000);
-    await oauthAccount.connect(addr1).createPersona(p2.address, [], [], 1000);
+    await oauthAccount
+      .connect(addr1)
+      .createPersona(
+        p1.address,
+        [target.address],
+        [],
+        ethers.utils.parseEther("1.2")
+      );
+    await oauthAccount.connect(addr1).approve(owner.address);
+    await oauthAccount.createSharingPersona(p2.address, [target.address], [], {
+      value: ethers.utils.parseEther("1"),
+    });
 
-    await oauthAccount.connect(p1).transfer(target.address, 100);
+    console.log(
+      ethers.utils.formatEther(
+        await ethers.provider.getBalance(oauthAccount.address)
+      )
+    );
   });
 });

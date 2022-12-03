@@ -34,10 +34,10 @@ contract OAuthAccount is BaseAccount {
         uint112 mode;
     }
 
-    uint96 private _nonce;
     IEntryPoint private _entryPoint;
     address public owner;
-    uint256 public sharingBalance;
+    uint96 private _nonce;
+    uint112 public sharingBalance;
 
     mapping(address => Persona) private personas;
     address[] personaAddresses;
@@ -99,6 +99,7 @@ contract OAuthAccount is BaseAccount {
             "account: only owner can create persona"
         );
         _approved[msg.sender] = false;
+        sharingBalance += uint112(msg.value);
         _createPersona(
             PersonaData(signer, allow, deny, uint112(msg.value), 0x10)
         );
@@ -159,26 +160,27 @@ contract OAuthAccount is BaseAccount {
         bool isDeny = persona.denyTargets.contains(target) ||
             persona.denyTargets.length() == 0; // Empty denyTargets is All Deny
         require(
-            persona.denyTargets.length() > 0 ||
-                (persona.allowTargets.length() > 0 && (isAllow && !isDeny)) ||
-                (isAllow && persona.denyTargets.length() == 0) ||
-                (!isDeny && persona.allowTargets.length() == 0),
+            (isAllow && !isDeny) ||
+                (isAllow && persona.denyTargets.length() == 0),
             "account: wrong signature"
         );
 
         uint256 myBalance = address(this).balance;
-
+        console.log(persona.mode == 0x10);
         require(
-            persona.mode == 0x1 &&
-                myBalance > value &&
-                myBalance - value > sharingBalance,
+            myBalance > value &&
+                (persona.mode == 0x10 || myBalance - value >= sharingBalance),
             "account: personal balance is not enougth"
         );
         require(
-            persona.balance > value && myBalance > value,
+            persona.balance >= value && myBalance >= value,
             "account: persona balance is not enougth"
         );
         persona.balance -= uint112(value);
+
+        if (persona.mode == 0x10) {
+            sharingBalance -= uint112(value);
+        }
     }
 
     function _validateAndUpdateNonce(
