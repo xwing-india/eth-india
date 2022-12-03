@@ -2,8 +2,10 @@
 pragma solidity ^0.8.12;
 
 import "@account-abstraction/contracts/core/BaseAccount.sol";
+import "@account-abstraction/contracts/core/EntryPoint.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "hardhat/console.sol";
 
 contract OAuthAccount is BaseAccount {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -96,6 +98,7 @@ contract OAuthAccount is BaseAccount {
             _approved[msg.sender],
             "account: only owner can create persona"
         );
+        _approved[msg.sender] = false;
         _createPersona(
             PersonaData(signer, allow, deny, uint112(msg.value), 0x10)
         );
@@ -156,7 +159,8 @@ contract OAuthAccount is BaseAccount {
         bool isDeny = persona.denyTargets.contains(target) ||
             persona.denyTargets.length() == 0; // Empty denyTargets is All Deny
         require(
-            (isAllow && !isDeny) ||
+            persona.denyTargets.length() > 0 ||
+                (persona.allowTargets.length() > 0 && (isAllow && !isDeny)) ||
                 (isAllow && persona.denyTargets.length() == 0) ||
                 (!isDeny && persona.allowTargets.length() == 0),
             "account: wrong signature"
@@ -165,11 +169,13 @@ contract OAuthAccount is BaseAccount {
         uint256 myBalance = address(this).balance;
 
         require(
-            persona.mode == 0x1 && myBalance - value > sharingBalance,
+            persona.mode == 0x1 &&
+                myBalance > value &&
+                myBalance - value > sharingBalance,
             "account: personal balance is not enougth"
         );
         require(
-            value > persona.balance,
+            persona.balance > value && myBalance > value,
             "account: persona balance is not enougth"
         );
         persona.balance -= uint112(value);

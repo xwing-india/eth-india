@@ -8,20 +8,13 @@ contract DemoPaymaster is BasePaymaster {
     using ECDSA for bytes32;
     using UserOperationLib for UserOperation;
 
-    address public immutable verifyingSigner;
-
-    constructor(
-        IEntryPoint _entryPoint,
-        address _verifyingSigner
-    ) BasePaymaster(_entryPoint) {
-        verifyingSigner = _verifyingSigner;
-    }
+    constructor(IEntryPoint _entryPoint) BasePaymaster(_entryPoint) {}
 
     function validatePaymasterUserOp(
         UserOperation calldata,
         bytes32,
         uint256
-    ) external view override returns (bytes memory context, uint256 deadline) {
+    ) external pure override returns (bytes memory context, uint256 deadline) {
         return ("", 0);
     }
 }
