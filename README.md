@@ -33,3 +33,13 @@
 | EntryPoint    | 0xab0e55123087E8139822f3163392bf9b719F31C6 |
 | OAuthDeployer | 0x7C23128C4cD82e6ebd399a7c10d0DC358582155b |
 | Paymaster     | 0x6cBE2e61BAfD1E95C57d342Ab2694A61C1345f96 |
+
+
+## sponsors 
+
+### Polygon
+the contract addresses are above.
+- A tool for DAO asset management was implemented on Polygon.
+- Until now, the DAOs have simply transferred money in batches to project leaders and others in projects where budget decisions have been made. There was a problem with transparency due to the possibility of confusion with personal assets, the possibility of being hacked, and not knowing which transactions were related to the project. We created a wallet that allowed DAOs to specify which contracts they could use to transfer money to the budget executor, keeping it separate from the rest of the budget.
+- Contributors have peace of mind and identity by SBT.
+
