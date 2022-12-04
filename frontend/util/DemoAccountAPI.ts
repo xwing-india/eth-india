@@ -54,9 +54,7 @@ export class DemoAccountAPI extends BaseAccountAPI {
 
 export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: BigNumberish, data: string) => {
   // password から秘密鍵を作る
-  try{
   const providerHost = `https://${network}.infura.io/v3/${InfuraAPIKey}`
-  const provider =  new ethers.providers.InfuraProvider(network, InfuraAPIKey)
   console.log(`personaPassword: ${personaPassword}`)
   const personaAccount = new ethers.Wallet(ethers.utils.id(String(personaPassword)));
 
@@ -64,11 +62,11 @@ export const sendToBundler = async (network: string, personaPassword: string, fr
 
   // UserOperation の組み立て
   const api = new DemoAccountAPI({
-    accountContract: OAuthAccount__factory.connect(OAuthContractAddress,provider),
+    accountContract: OAuthAccount__factory.connect(OAuthContractAddress, new ethers.providers.JsonRpcProvider(providerHost)),
     accountAddress: OAuthContractAddress,
     personaSigner: new Wallet(personaAccount.privateKey),
     entryPointAddress: EntryPointContractAddress,
-    provider,
+    provider: new ethers.providers.JsonRpcProvider(providerHost),
     paymasterAPI: { getPaymasterAndData: async () => PayMasterContractAddress },
   })
 
@@ -99,7 +97,4 @@ export const sendToBundler = async (network: string, personaPassword: string, fr
       },
     }),
   })
-  }catch(e){
-    console.log(e)
-  }
 };
