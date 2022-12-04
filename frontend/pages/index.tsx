@@ -56,12 +56,11 @@ export default function Home() {
 			<div>
 				<div className="mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40">
 					<h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-						One wallet Muti accounts
+						One wallet Multi accounts
 					</h1>
 					<p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-						By creating accounts to manage the assets/authorities in a contract
-						wallet(compliant with EIP-4337), transaction history and SBT can be
-						stored in a single contract wallet while increasing security.
+					firewallet is an EIP4337 compliant secure contract wallet that enables you to create roles.
+					the role can limit the amount of money that can transfer and the contract that can call.
 					</p>
 					<div className="mt-8 flex sm:justify-center gap-3">
 						<div className="rounded-lg bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-[3px]">
