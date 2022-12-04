@@ -12,8 +12,11 @@ import { OAuthAccount, OAuthAccount__factory } from "../typechain-types";
 import ConfirmModal from "../components/ConfirmModal";
 import Button from "../components/atom/Button";
 import Footer from "../components/atom/Footer";
+import { useRouter } from "next/router";
 
 export default function Home() {
+	const router = useRouter();
+
 	const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
 	const [isAddModal, setIsAddModal] = useState<boolean>(false);
 	const [isConfirmModal, setIsConfirmModal] = useState<boolean>(false);
@@ -72,7 +75,7 @@ export default function Home() {
 			"createPersona",
 			[wallet.address, whiteList, blackList || [], spendLimit]
 		);
-		await sendToBundler(
+		const txHash = await sendToBundler(
 			"goerli",
 			rootPassword || "",
 			OAuthContractAddress,
@@ -80,6 +83,8 @@ export default function Home() {
 			0,
 			data
 		);
+		console.log(`https://goerli.etherscan.io/tx/${txHash}`);
+		await router.push("/home");
 	};
 
 	return (
