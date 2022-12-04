@@ -1,12 +1,35 @@
 # Firewallet
 
-## Demo Accounts
+## Deploy
 
-| Name | Address |
-| -- | --- |
-| Demo AA | 0x71dB99931ECd9c41A0A3eb004100F157697443Ee |
-| AA Factory | - |
-| Bundler Wallet | 0x5Ab1eA0a966aA678845Fa70a7BC890127B7Dc55A |
-| Entry Point | 0xb59fe658170fA89736cC8414D1a354ca21054A4A |
-| Payment Master | 0x2B0C9a206754032Bc08c234afbF38D24e2186aa1 |
-| Demo Target | - |
+### Goerli
+
+| Name          | Address                                    |
+| ------------- | ------------------------------------------ |
+| EntryPoint    | 0x100A8BFc27614d2E50b374dD6d8EF8357E295C6B |
+| OAuthDeployer | 0xAaBd1279b524e6F7c0eA5d2F04d5EcF60a10aF9a |
+| Paymaster     | 0x6eACccd2f9B4C91C007bdEE204909669Feb6a8BB |
+
+### Mumbai
+
+| Name          | Address                                    |
+| ------------- | ------------------------------------------ |
+| EntryPoint    | 0xA1d8B8BcBbEB8bF7389d3f55F9528EB4951DfF3f |
+| OAuthDeployer | 0x30791bA4687DE7F2d27d3d4578e2e069808BccEe |
+| Paymaster     | 0xCAE4d008339842BA3c977D5ae2f63510F3Cb7e5D |
+
+### Cronos Testnet
+
+| Name          | Address                                    |
+| ------------- | ------------------------------------------ |
+| EntryPoint    | 0x7C23128C4cD82e6ebd399a7c10d0DC358582155b |
+| OAuthDeployer | 0x6cBE2e61BAfD1E95C57d342Ab2694A61C1345f96 |
+| Paymaster     | 0x10A102716B73b539f1574C47200c0dc5A0Ec62e9 |
+
+### Gnosis Chain Testnet
+
+| Name          | Address                                    |
+| ------------- | ------------------------------------------ |
+| EntryPoint    | 0xab0e55123087E8139822f3163392bf9b719F31C6 |
+| OAuthDeployer | 0x7C23128C4cD82e6ebd399a7c10d0DC358582155b |
+| Paymaster     | 0x6cBE2e61BAfD1E95C57d342Ab2694A61C1345f96 |
