@@ -140,9 +140,10 @@ export default function Home() {
 								</div>
 								<div className="mb-24">
 									{displayWhiteList &&
-										displayWhiteList.map((item) => {
+										displayWhiteList.map((item, idx) => {
 											return (
 												<ContractBlock
+													key={idx}
 													src=""
 													name={item.name}
 													address={item.address}
