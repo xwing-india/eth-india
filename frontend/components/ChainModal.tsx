@@ -18,7 +18,7 @@ const customStyles: ReactModal.Styles = {
 		bottom: "auto",
 		marginRight: "-50%",
 		width: "400px",
-		height: "400px",
+		height: "330px",
 		transform: "translate(-50%, -50%)",
 		borderRadius: "12px",
 		border: "0px",
@@ -48,10 +48,6 @@ const chain = [
 	{
 		name: "Gnosis",
 		url: "gnosis.png",
-	},
-	{
-		name: "Shardeum",
-		url: "shardeum.png",
 	},
 ];
 
