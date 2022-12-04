@@ -48,24 +48,27 @@ describe("OAuth", () => {
         [target.address],
         ethers.utils.parseEther("1.2")
       );
-    //   console.log(await oauthAccount.getPersona(p1.address));
+
     const addr1Api = new SimpleAccountAPI({
       provider: ethers.provider,
       entryPointAddress: entryPoint.address,
       accountAddress: oauthAccount.address,
-
       paymasterAPI: { getPaymasterAndData: async () => paymaster.address },
-      owner: p1,
+      owner: addr1,
     });
     const op = await addr1Api.createSignedUserOp({
-      target: counter.address,
-      data: counter.interface.encodeFunctionData("justemit"),
+      target: oauthAccount.address,
+      data: oauthAccount.interface.encodeFunctionData("createPersona", [
+        p1.address,
+        [counter.address],
+        [target.address],
+        ethers.utils.parseEther("1.2"),
+      ]),
+      //  data: counter.interface.encodeFunctionData("justemit"),
     });
-
-    console.log(await ethers.provider.getBalance(owner.address));
+    console.log(op);
 
     const tx = await entryPoint.handleOps([op], owner.address);
     // console.log(JSON.stringify(await tx.wait()));
-    console.log(await ethers.provider.getBalance(owner.address));
   });
 });
