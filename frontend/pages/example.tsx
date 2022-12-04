@@ -31,7 +31,8 @@ const Test = () => {
   const doSend = async () => {
    	if (!to||!password) return;
 	setIsLoading(true)
-   	await sendToBundler("goerli",password,OAuthContractAddress,to,ethers.utils.parseEther(value),"0x00");
+    const txHash = await sendToBundler("goerli",password,OAuthContractAddress,to,ethers.utils.parseEther(value),"0x00");
+  console.log(`https://goerli.etherscan.io/tx/${txHash}`);
 	setIsLoading(false)
   };
 

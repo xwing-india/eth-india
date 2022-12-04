@@ -52,7 +52,7 @@ export class DemoAccountAPI extends BaseAccountAPI {
   }
 }
 
-export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: BigNumberish, data: string) => {
+export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: BigNumberish, data: string): Promise<string> => {
   // password から秘密鍵を作る
   const providerHost = `https://${network}.infura.io/v3/${InfuraAPIKey}`
   console.log(`personaPassword: ${personaPassword}`)
@@ -79,7 +79,7 @@ export const sendToBundler = async (network: string, personaPassword: string, fr
   console.log(op);
 
   // Bundler API を叩く
-  await fetch(BundlerRunOpRPCEndpoint, {
+  const responseBody = await fetch(BundlerRunOpRPCEndpoint, {
     method: "POST",
     headers: {
       'content-type': 'application/json',
@@ -96,5 +96,6 @@ export const sendToBundler = async (network: string, personaPassword: string, fr
         maxPriorityFeePerGas: op.maxPriorityFeePerGas.toString(),
       },
     }),
-  })
+  }).then((res) => res.json());
+  return responseBody.transaction_hash;
 };
