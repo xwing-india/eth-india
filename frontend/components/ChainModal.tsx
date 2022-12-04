@@ -75,7 +75,7 @@ const ChainModal: FC<Prop> = ({
 						{chain &&
 							chain.map((item, index) => {
 								return (
-									<div className="px-4 pt-8">
+									<div className="px-4 pt-8" key={item.name}>
 										<div
 											onChange={() => {}}
 											className="flex justify-start items-center"
