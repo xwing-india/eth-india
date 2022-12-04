@@ -40,6 +40,7 @@ const ProfileBlock: FC<Prop> = ({
 					contractAddress.map((item, index) => {
 						return (
 							<Avatar
+								key={index}
 								size={36}
 								name={item}
 								variant="marble"

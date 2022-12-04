@@ -55,6 +55,7 @@ const Persona: FC<Prop> = ({ openAddModal }) => {
 						data.map((item, index) => {
 							return (
 								<ProfileBlock
+									key={index}
 									name={item.name}
 									contractAddress={item.contractAddress}
 									spendLimit={item.spendLimit}
