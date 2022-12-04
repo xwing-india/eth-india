@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@account-abstraction/sdk": "^0.3.0",
+    "@etherspot/react-transaction-buidler": "^0.21.0",
     "@ethersproject/providers": "^5.7.2",
     "@headlessui/react": "^1.7.4",
     "@types/node": "18.11.10",

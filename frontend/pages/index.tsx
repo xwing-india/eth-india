@@ -56,7 +56,7 @@ export default function Home() {
 			<div>
 				<div className="mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40">
 					<h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-						One wallet Muti accounts
+						One wallet Multi accounts
 					</h1>
 					<p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
 						By creating accounts to manage the assets/authorities in a contract
