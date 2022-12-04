@@ -66,7 +66,7 @@ const Persona: FC<Prop> = ({ openAddModal }) => {
 	}, []);
 	return (
 		<div className="h-[503px] rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-[3px] shadow-md relative">
-			<div className="h-full w-full bg-white rounded-[9px] ">
+			<div className="h-full w-full bg-white rounded-[9px] overflow-x-scroll">
 				<div className="flex justify-between items-center h-[72px] px-4">
 					<div className="flex justify-start items-end gap-4 text-sm">
 						<div className="text-2xl text-black">Persona</div>

@@ -59,14 +59,15 @@ export default function Home() {
 						One wallet Multi accounts
 					</h1>
 					<p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-					firewallet is an EIP4337 compliant secure contract wallet that enables you to create roles.
-					the role can limit the amount of money that can transfer and the contract that can call.
+						firewallet is an EIP4337 compliant secure contract wallet that
+						enables you to create roles. the role can limit the amount of money
+						that can transfer and the contract that can call.
 					</p>
 					<div className="mt-8 flex sm:justify-center gap-3">
 						<div className="rounded-lg bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-[3px]">
 							<input
 								type="text"
-								className=" h-full w-full rounded-[5px] pl-2"
+								className=" h-full w-full rounded-[5px] pl-2 bg-white"
 								placeholder="Enter Address or ENS"
 							/>
 						</div>
