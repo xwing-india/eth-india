@@ -43,25 +43,33 @@ const raw = [1, 2, 3];
 const Persona: FC<Prop> = ({ openAddModal }) => {
   const [personas, serPersonas] =
     useState<[string, OAuthAccount.PersonaDataStructOutput][]>();
+  const [balance,setBalance] = useState("");
   useEffect(() => {
+	const provider = new ethers.providers.InfuraProvider("goerli", InfuraAPIKey)
     const account = OAuthAccount__factory.connect(
       OAuthContractAddress,
-      new ethers.providers.InfuraProvider("goerli", InfuraAPIKey)
+      provider
     );
     void (async () => {
+	  const balance = await provider.getBalance(account.address);
+      setBalance(ethers.utils.formatEther(balance))
       const personaCount = await account.totalPersona();
       const personas: [string, OAuthAccount.PersonaDataStructOutput][] = [];
       for (let i = 0; personaCount.toNumber() > i; i++) {
         personas.push(await account.getPersonaByIndex(i));
       }
       serPersonas(personas);
+
     })();
   }, []);
   return (
-    <div className="h-[503px] rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-[3px] shadow-md">
+    <div className="min-h-[503px] rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500 p-[3px] shadow-md">
       <div className="h-full  w-full items-center justify-center bg-white rounded-[9px]">
         <div className="flex justify-between items-center h-[72px] px-4">
-          <div className="text-2xl text-black">Persona</div>
+
+          	<div className="text-2xl text-black">Persona</div>
+
+			<div className="text-xl">{balance}ETH</div>
           <Link
             href="/add"
             className="px-6 text-white cursor-pointer font-bold py-2 text-sm rounded-lg bg-gradient-to-r from-sky-400 via-blue-400 to-blue-500"
