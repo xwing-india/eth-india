@@ -1,5 +1,7 @@
 # Firewallet
 
+![0c64eaaa-6298-4972-90fd-05998442555e](https://user-images.githubusercontent.com/51313744/205475854-2b212011-db0d-4808-b719-80529c425f78.png)
+
 ## problem
 Currently, if the private key of an EOA is stolen, all the assets in that wallet will be stolen.
 So users create multiple EOA addresses to spread the risk. But in that case, things like SBT will also be distributed, and the information of that person's transactions will not be accumulated in one account.
