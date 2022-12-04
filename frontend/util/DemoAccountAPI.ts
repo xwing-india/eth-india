@@ -52,7 +52,7 @@ export class DemoAccountAPI extends BaseAccountAPI {
   }
 }
 
-export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
+export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: BigNumberish, data: string) => {
   // password から秘密鍵を作る
   const providerHost = `https://${network}.infura.io/v3/${InfuraAPIKey}`
   console.log(`personaPassword: ${personaPassword}`)
@@ -73,6 +73,7 @@ export const sendToBundler = async (network: string, personaPassword: string, fr
   const op = await resolveProperties(await api.createSignedUserOp({
     target: to, // 送り先のアドレス
     data: data, // 具体的な処理のデータ
+    value
   }));
 
   console.log(op);
