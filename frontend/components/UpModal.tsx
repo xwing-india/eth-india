@@ -100,7 +100,7 @@ const UpModal: FC<Prop> = ({ isUpModal, closeUpModal, addInfo }) => {
 						</div>
 						<div className="flex justify-between text-gray-700 pt-4 font-bold">
 							<div>Spending Limit</div>
-							<div>{addInfo?.spendLimit} ETH</div>
+							<div>{addInfo?.spendLimit} Gwei</div>
 						</div>
 						<div
 							onChange={doChangeRootPassword}
