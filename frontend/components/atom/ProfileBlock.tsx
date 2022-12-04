@@ -27,8 +27,8 @@ const ProfileBlock: FC<Prop> = ({
 			</div>
 			{isGuest ? (
 				<div className="col-span-2 flex justify-start items-center">
-					<div className="text-black text-lg">{name}</div>
-					<div className="bg-orange-500 px-3 py-1 text-xs mx-2 rounded-md font-bold">
+					<div className="text-black ">{name}</div>
+					<div className="bg-orange-500 text-white px-3 py-1 text-xs mx-2 rounded-md font-bold">
 						Guest
 					</div>
 				</div>
@@ -40,6 +40,7 @@ const ProfileBlock: FC<Prop> = ({
 					contractAddress.map((item, index) => {
 						return (
 							<Avatar
+								key={index}
 								size={36}
 								name={item}
 								variant="marble"

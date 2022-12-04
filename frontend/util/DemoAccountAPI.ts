@@ -1,12 +1,13 @@
 import {BigNumber, BigNumberish, ethers, Signer, Wallet} from "ethers";
 import {BaseApiParams, BaseAccountAPI} from "@account-abstraction/sdk/dist/src/BaseAccountAPI";
-import {arrayify} from "ethers/lib/utils";
+import {arrayify,resolveProperties} from "ethers/lib/utils";
 import {OAuthAccount, OAuthAccount__factory} from "../typechain-types";
 import {
   OAuthContractAddress,
   EntryPointContractAddress,
-  BundlerRunOpRPCEndpoint,
+  BundlerRunOpRPCEndpoint, PayMasterContractAddress, InfuraAPIKey,
 } from "./consts";
+import {UserOperationStruct} from "@account-abstraction/contracts";
 
 export interface DemoAccountApiParams extends BaseApiParams {
   personaSigner: Signer;
@@ -28,7 +29,7 @@ export class DemoAccountAPI extends BaseAccountAPI {
 
   getAccountInitCode(): Promise<string> {
     // Note: デモでは絶対 Deploy されているので何もしない。
-    return Promise.resolve("");
+    return Promise.resolve("0x");
   }
 
   getNonce(): Promise<BigNumber> {
@@ -51,24 +52,31 @@ export class DemoAccountAPI extends BaseAccountAPI {
   }
 }
 
-export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: number, data: string) => {
+export const sendToBundler = async (network: string, personaPassword: string, from: string, to: string, value: BigNumberish, data: string) => {
   // password から秘密鍵を作る
-  const infuraApiKey = process.env.INFURA_API_KEY;
-  const providerHost = `https://${network}.infura.io/v3/${infuraApiKey}`
-  const personaAccount = new ethers.Wallet(ethers.utils.id(personaPassword));
+  const providerHost = `https://${network}.infura.io/v3/${InfuraAPIKey}`
+  console.log(`personaPassword: ${personaPassword}`)
+  const personaAccount = new ethers.Wallet(ethers.utils.id(String(personaPassword)));
+
+  console.log(`PersonaAccount address: ${personaAccount.address}`)
 
   // UserOperation の組み立て
   const api = new DemoAccountAPI({
-    accountContract: OAuthAccount__factory.connect(OAuthContractAddress, ethers.getDefaultProvider(providerHost)),
+    accountContract: OAuthAccount__factory.connect(OAuthContractAddress, new ethers.providers.JsonRpcProvider(providerHost)),
+    accountAddress: OAuthContractAddress,
     personaSigner: new Wallet(personaAccount.privateKey),
     entryPointAddress: EntryPointContractAddress,
-    provider: ethers.getDefaultProvider(providerHost),
+    provider: new ethers.providers.JsonRpcProvider(providerHost),
+    paymasterAPI: { getPaymasterAndData: async () => PayMasterContractAddress },
   })
 
-  const op = api.createSignedUserOp({
+  const op = await resolveProperties(await api.createSignedUserOp({
     target: to, // 送り先のアドレス
     data: data, // 具体的な処理のデータ
-  });
+    value
+  }));
+
+  console.log(op);
 
   // Bundler API を叩く
   await fetch(BundlerRunOpRPCEndpoint, {
@@ -78,7 +86,15 @@ export const sendToBundler = async (network: string, personaPassword: string, fr
     },
     body: JSON.stringify({
       "network": network,
-      "op": op,
+      "op": {
+        ...op,
+        nonce: op.nonce.toString(),
+        callGasLimit: op.callGasLimit.toString(),
+        verificationGasLimit: op.verificationGasLimit.toString(),
+        preVerificationGas: op.preVerificationGas.toString(),
+        maxFeePerGas: op.maxFeePerGas.toString(),
+        maxPriorityFeePerGas: op.maxPriorityFeePerGas.toString(),
+      },
     }),
   })
 };
