@@ -1,6 +1,10 @@
 # Firewallet
 
-## Deploy
+## what we built
+
+
+
+## Deployed contracts
 
 ### Goerli
 
@@ -35,7 +39,7 @@
 | Paymaster     | 0x6cBE2e61BAfD1E95C57d342Ab2694A61C1345f96 |
 
 
-## sponsors 
+## integrated sponsors
 
 ### Polygon
 the contract addresses are above.
