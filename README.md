@@ -1,8 +1,21 @@
 # Firewallet
 
+## problem
+Currently, if the private key of an EOA is stolen, all the assets in that wallet will be stolen.
+So users create multiple EOA addresses to spread the risk. But in that case, things like SBT will also be distributed, and the information of that person's transactions will not be accumulated in one account.
+
 ## what we built
+We have implemented a brand new contract wallet that follows the EIP4337 standard.
+Users can create multiple roles (for private, for trading, for DAO pj, etc) by purpose.
+Users can place the following restrictions on roles
+- The total eth amount that can transfer
+- The contract that can call
+-etc
+The user executes the transaction using the specific role that suits for the tx
 
-
+## how it solved
+By creating roles in this way, and using roles instead of owner keys for everyday use, even if a role's password is stolen, the damage is limited to the scope of that role.
+ In addition, the information associated with the person, such as SBT, ENS, etc., will be linked to single address
 
 ## Deployed contracts
 
